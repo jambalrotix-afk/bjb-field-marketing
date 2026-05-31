@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProspects, updateProspectStatus } from '../services/db';
-import { Folder, Users, TrendingUp, Ban, FileSpreadsheet, Search, Sliders, Eye } from '../components/Icons';
+import { Folder, Users, TrendingUp, Ban, FileSpreadsheet, Search, Sliders, Eye, LayoutList, LayoutGrid, CreditCard, Banknote, Layers } from '../components/Icons';
 import Toast from '../components/Toast';
 import CustomSelect from '../components/CustomSelect';
 import ProspectDetailModal from '../components/ProspectDetailModal';
@@ -348,19 +348,22 @@ const ClientDirectory = () => {
           onClick={() => setCategoryFilter('All')}
           className={`tab-toggle-btn ${categoryFilter === 'All' ? 'active' : ''}`}
         >
-          Semua Kategori
+          <Layers size={15} />
+          <span>Semua Kategori</span>
         </button>
         <button
           onClick={() => setCategoryFilter('Kredit')}
           className={`tab-toggle-btn ${categoryFilter === 'Kredit' ? 'active' : ''}`}
         >
-          Kredit (Pembiayaan)
+          <CreditCard size={15} />
+          <span>Kredit</span>
         </button>
         <button
           onClick={() => setCategoryFilter('Funding')}
           className={`tab-toggle-btn ${categoryFilter === 'Funding' ? 'active' : ''}`}
         >
-          Funding (Dana)
+          <Banknote size={15} />
+          <span>Funding</span>
         </button>
       </div>
 
@@ -370,27 +373,31 @@ const ClientDirectory = () => {
         
         <div className="flex items-center gap-2" style={{ width: 'auto' }}>
           {/* List/Card Mode Toggle */}
-          <div className="tab-toggle" style={{ width: 'auto' }}>
+          <div className="tab-toggle" style={{ width: 'auto', height: '34px', padding: '2px', boxSizing: 'border-box', display: 'flex', alignItems: 'stretch' }}>
             <button
               onClick={() => setViewMode('table')}
               className={`tab-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
               title="Tampilan List"
+              style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
             >
-              List
+              <LayoutList size={14} />
+              <span>List</span>
             </button>
             <button
               onClick={() => setViewMode('card')}
               className={`tab-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
               title="Tampilan Kartu"
+              style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
             >
-              Card
+              <LayoutGrid size={14} />
+              <span>Card</span>
             </button>
           </div>
 
           <button 
             onClick={() => setShowFilters(!showFilters)} 
             className="btn btn-outline" 
-            style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', width: 'auto', fontWeight: 'bold', minHeight: '32px' }}
+            style={{ height: '34px', padding: '0 0.75rem', fontSize: '0.75rem', width: 'auto', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', minHeight: 'auto', boxSizing: 'border-box' }}
           >
             <Sliders size={12} style={{ marginRight: '4px' }} />
             {showFilters ? 'Tutup Filter' : 'Cari & Filter'}
@@ -607,16 +614,13 @@ const ClientDirectory = () => {
                     {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                     {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
                     <span style={{ fontWeight: 600 }}>{p.category}</span>
                     <span>•</span>
                     <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 700 }}>{formatRupiah(estimasi)}</span>
-                    {(user.role === 'Manager' || user.role === 'Super Admin') && (
-                      <>
-                        <span>•</span>
-                        <span>Sales: {salesName}</span>
-                      </>
-                    )}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    Sales: {salesName}
                   </div>
                 </div>
 

@@ -103,6 +103,24 @@ p {
   .main-content {
     padding: 1rem 0.875rem;
   }
+  .page-header-responsive {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+  .page-header-responsive h2 {
+    margin-bottom: 0 !important;
+    font-size: 1.25rem !important;
+  }
+  .page-header-responsive .btn-group-responsive {
+    width: 100% !important;
+    display: flex !important;
+    gap: 0.5rem !important;
+  }
+  .page-header-responsive .btn-group-responsive button {
+    flex: 1 !important;
+    justify-content: center !important;
+  }
 }
 
 @keyframes fadeIn {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProspects, updateProspectStatus, getActiveMemo, getTimelineTargets } from '../services/db';
-import { FileSpreadsheet, Eye } from '../components/Icons';
+import { FileSpreadsheet, Eye, LayoutList, LayoutGrid } from '../components/Icons';
 
 import Toast from '../components/Toast';
 import GreetingModal from '../components/GreetingModal';
@@ -441,20 +441,24 @@ const Dashboard = () => {
         
         <div className="flex items-center gap-2" style={{ width: 'auto' }}>
           {/* View Mode Toggle */}
-          <div className="tab-toggle" style={{ width: 'auto' }}>
+          <div className="tab-toggle" style={{ width: 'auto', height: '34px', padding: '2px', boxSizing: 'border-box', display: 'flex', alignItems: 'stretch' }}>
             <button
               onClick={() => setViewMode('table')}
               className={`tab-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
               title="Tampilan List"
+              style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
             >
-              List
+              <LayoutList size={14} />
+              <span>List</span>
             </button>
             <button
               onClick={() => setViewMode('card')}
               className={`tab-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
               title="Tampilan Kartu"
+              style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
             >
-              Card
+              <LayoutGrid size={14} />
+              <span>Card</span>
             </button>
           </div>
 
@@ -472,14 +476,14 @@ const Dashboard = () => {
                 { value: 20, label: '20 baris' },
                 { value: 50, label: '50 baris' }
               ]}
-              style={{ height: '32px', fontSize: '0.75rem' }}
+              style={{ height: '34px', fontSize: '0.75rem' }}
             />
           </div>
 
           <button 
             onClick={() => setShowFilters(!showFilters)} 
             className="btn btn-outline" 
-            style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', width: 'auto', fontWeight: 'bold', minHeight: '32px' }}
+            style={{ height: '34px', padding: '0 0.75rem', fontSize: '0.75rem', width: 'auto', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', minHeight: 'auto', boxSizing: 'border-box' }}
           >
             {showFilters ? 'Tutup Filter' : 'Cari & Filter'}
           </button>
@@ -655,16 +659,13 @@ const Dashboard = () => {
                     {!p.synced && <span className="badge-offline">Offline</span>}
                     {(p.status === 'Approval' || p.status === 'Akad') && <span className="badge-urgent">Perlu Tindakan</span>}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
                     <span style={{ fontWeight: 600 }}>{p.category}</span>
                     <span>•</span>
                     <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 700 }}>{formatRupiah(estimasi)}</span>
-                    {(user.role === 'Manager' || user.role === 'Super Admin') && (
-                      <>
-                        <span>•</span>
-                        <span>Sales: {salesName}</span>
-                      </>
-                    )}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    Sales: {salesName}
                   </div>
                 </div>
 

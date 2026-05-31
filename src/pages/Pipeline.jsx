@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProspects, updateProspectStatus } from '../services/db';
-import { ChevronLeft, ChevronRight, Eye } from '../components/Icons';
+import { ChevronLeft, ChevronRight, Eye, CreditCard, Banknote } from '../components/Icons';
 import Toast from '../components/Toast';
 import CustomSelect from '../components/CustomSelect';
 import ProspectDetailModal from '../components/ProspectDetailModal';
@@ -191,7 +191,8 @@ const Pipeline = () => {
           }}
           className={`tab-toggle-btn ${activeCategory === 'Kredit' ? 'active' : ''}`}
         >
-          Kredit (Pembiayaan)
+          <CreditCard size={15} />
+          <span>Kredit</span>
         </button>
         <button
           onClick={() => {
@@ -201,7 +202,8 @@ const Pipeline = () => {
           }}
           className={`tab-toggle-btn ${activeCategory === 'Funding' ? 'active' : ''}`}
         >
-          Funding (Dana)
+          <Banknote size={15} />
+          <span>Funding</span>
         </button>
       </div>
 
@@ -374,9 +376,11 @@ const Pipeline = () => {
                             <span className="pipeline-card-amount">
                               {formatRupiah(estimasi)}
                             </span>
-                            {(user.role === 'Manager' || user.role === 'Super Admin') && (
-                              <span className="pipeline-card-sales">Sales: {salesName}</span>
-                            )}
+                          </div>
+
+                          {/* Row 3: Sales Name */}
+                          <div className="pipeline-card-sales" style={{ display: 'block', marginTop: '0.1rem', marginBottom: '0.35rem' }}>
+                            Sales: {salesName}
                           </div>
 
                           {/* Row 3: Detail + Geser Tahap */}

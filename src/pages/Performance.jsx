@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProspects, getTimelineTargets, saveTimelineTargets, getActiveMemo, saveActiveMemo } from '../services/db';
-import { BarChart3, Filter, Search, Target, Table, Crown, Compass, Printer, FileSpreadsheet, Settings } from '../components/Icons';
+import { BarChart3, Filter, Search, Target, Table, Crown, Compass, Printer, FileSpreadsheet, Settings, Hash, DollarSign } from '../components/Icons';
 import CustomSelect from '../components/CustomSelect';
 import Toast from '../components/Toast';
 
@@ -365,10 +365,10 @@ const Performance = () => {
       </div>
 
       {/* Header Screen */}
-      <div className="flex justify-between items-center mb-4 hide-print">
+      <div className="flex justify-between items-center mb-4 hide-print page-header-responsive">
         <h2>Analisis Kinerja Tim</h2>
         
-        <div className="flex gap-2">
+        <div className="flex gap-2 btn-group-responsive">
           <button 
             type="button" 
             onClick={handlePrint} 
@@ -581,7 +581,8 @@ const Performance = () => {
                 className={`tab-toggle-btn ${chartMetric === 'count' ? 'active' : ''}`}
                 style={{ fontSize: '0.78rem', padding: '0.4rem' }}
               >
-                Jumlah Prospek (Unit)
+                <Hash size={14} />
+                <span>Jumlah Prospek (Unit)</span>
               </button>
               <button 
                 type="button" 
@@ -589,7 +590,8 @@ const Performance = () => {
                 className={`tab-toggle-btn ${chartMetric === 'volume' ? 'active' : ''}`}
                 style={{ fontSize: '0.78rem', padding: '0.4rem' }}
               >
-                Total Rupiah (Volume IDR)
+                <DollarSign size={14} />
+                <span>Total Rupiah (Volume IDR)</span>
               </button>
             </div>
 

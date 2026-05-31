@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Phone, MapPin, Calendar, User, TrendingUp, Globe, FileText } from './Icons';
+import PromptModal from './PromptModal';
 
 const formatRupiah = (value) => {
   if (!value) return 'Rp 0';
@@ -55,6 +56,20 @@ const ProspectPhotoModal = ({ blob }) => {
 };
 
 const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChange }) => {
+  // State untuk custom prompt modal
+  const [promptModal, setPromptModal] = useState({ open: false, type: null });
+
+  const openPrompt = (type) => setPromptModal({ open: true, type });
+  const closePrompt = () => setPromptModal({ open: false, type: null });
+
+  const handlePromptConfirm = (reason) => {
+    const { type } = promptModal;
+    closePrompt();
+    if (type === 'Batal' || type === 'Ditolak') {
+      onStatusChange(prospect.id, type);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -67,6 +82,10 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
   }, [isOpen]);
 
   if (!isOpen || !prospect) return null;
+
+  const promptConfig = promptModal.type === 'Ditolak'
+    ? { icon: '🚫', title: 'Tolak Prospek', label: 'Alasan Penolakan (Opsional)', placeholder: 'Contoh: Tidak memenuhi syarat kredit...', type: 'danger', confirmText: 'Tolak Prospek' }
+    : { icon: '❌', title: 'Batalkan Prospek', label: 'Alasan Pembatalan (Opsional)', placeholder: 'Contoh: Nasabah menarik diri...', type: 'warning', confirmText: 'Batalkan' };
 
   const p = prospect;
   const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
@@ -397,7 +416,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Phone size={14} style={{ color: 'var(--bjb-blue)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '90px', fontWeight: 500 }}>No. Telepon:</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>No. Telepon:</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <a href={`tel:${p.phone}`} style={{ fontSize: '0.85rem', color: 'var(--bjb-blue)', fontWeight: 700, textDecoration: 'none' }} title="Telepon Langsung">
                     {p.phone}
@@ -435,7 +454,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                 <MapPin size={14} style={{ color: 'var(--status-cold)', marginTop: '3px', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '90px', fontWeight: 500 }}>Alamat:</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>Alamat:</span>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
                   {p.address || '-'}
                 </span>
@@ -443,7 +462,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-light)', paddingTop: '0.6rem', marginTop: '0.2rem' }}>
                 <User size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '90px', fontWeight: 500 }}>Marketing:</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>Marketing:</span>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 600 }}>
                   {salesName}
                 </span>
@@ -451,7 +470,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Calendar size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '90px', fontWeight: 500 }}>Tgl Kunjungan:</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>Tgl Kunjungan:</span>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-main)' }}>
                   {p.createdAt || p.tanggalKunjungan ? new Date(p.createdAt || p.tanggalKunjungan).toLocaleDateString('id-ID', { dateStyle: 'long' }) : '-'}
                 </span>
@@ -632,12 +651,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
               <>
                 <button
                   type="button"
-                  onClick={() => {
-                    const reason = window.prompt('Masukkan alasan pembatalan prospek (Opsional):');
-                    if (reason !== null) {
-                      onStatusChange(p.id, 'Batal');
-                    }
-                  }}
+                  onClick={() => openPrompt('Batal')}
                   className="btn btn-outline"
                   style={{ 
                     padding: '0.5rem 0.8rem', 
@@ -654,12 +668,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    const reason = window.prompt('Masukkan alasan penolakan prospek (Opsional):');
-                    if (reason !== null) {
-                      onStatusChange(p.id, 'Ditolak');
-                    }
-                  }}
+                  onClick={() => openPrompt('Ditolak')}
                   className="btn"
                   style={{ 
                     padding: '0.5rem 0.8rem', 
@@ -696,6 +705,15 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
         </div>
 
       </div>
+
+      {/* Custom Prompt Modal (pengganti window.prompt) */}
+      <PromptModal
+        isOpen={promptModal.open}
+        {...promptConfig}
+        onConfirm={handlePromptConfirm}
+        onCancel={closePrompt}
+        cancelText="Kembali"
+      />
     </div>,
     document.body
   );
