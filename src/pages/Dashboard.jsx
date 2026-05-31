@@ -46,6 +46,161 @@ const categoryFilterOptions = [
   { value: 'Funding', label: 'Funding' }
 ];
 
+const renderStatusBadge = (status) => {
+  const s = status ? status.trim() : 'Cold';
+  const statusLower = s.toLowerCase();
+  
+  // Mapping status to details with professional SVG icons and premium colors
+  const config = {
+    cold: {
+      label: 'Cold',
+      color: '#0284c7', // Sky Blue
+      bg: '#e0f2fe',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4M12 16h.01"/>
+        </svg>
+      )
+    },
+    warm: {
+      label: 'Warm',
+      color: '#ea580c', // Orange
+      bg: '#ffedd5',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+      )
+    },
+    hot: {
+      label: 'Hot',
+      color: '#dc2626', // Red
+      bg: '#fee2e2',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+        </svg>
+      )
+    },
+    sosialisasi: {
+      label: 'Sosialisasi',
+      color: '#0d9488', // Teal
+      bg: '#f0fdfa',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      )
+    },
+    negosiasi: {
+      label: 'Negosiasi',
+      color: '#4f46e5', // Indigo
+      bg: '#e0e7ff',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      )
+    },
+    pemberkasan: {
+      label: 'Pemberkasan',
+      color: '#d97706', // Amber
+      bg: '#fef3c7',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+      )
+    },
+    analisa: {
+      label: 'Analisa',
+      color: '#2563eb', // Royal Blue
+      bg: '#dbeafe',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      )
+    },
+    approval: {
+      label: 'Approval',
+      color: '#16a34a', // Emerald Green
+      bg: '#dcfce7',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      )
+    },
+    akad: {
+      label: 'Akad',
+      color: '#15803d', // Dark Green
+      bg: '#dcfce7',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <polyline points="9 11 11 13 15 9"/>
+        </svg>
+      )
+    },
+    ditolak: {
+      label: 'Ditolak',
+      color: '#b91c1c', // Crimson Red
+      bg: '#fee2e2',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+        </svg>
+      )
+    },
+    batal: {
+      label: 'Batal',
+      color: '#475569', // Slate Gray
+      bg: '#f1f5f9',
+      icon: (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      )
+    }
+  };
+  
+  const activeConfig = config[statusLower] || config.cold;
+  
+  return (
+    <div 
+      title={`Status: ${activeConfig.label}`} 
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '28px',
+        height: '28px',
+        borderRadius: '50%',
+        backgroundColor: activeConfig.bg,
+        color: activeConfig.color,
+        border: `1px solid rgba(0, 0, 0, 0.08)`,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+        flexShrink: 0,
+        transition: 'all 0.2s ease',
+        cursor: 'default'
+      }}
+    >
+      {activeConfig.icon}
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const [user, setUser] = useState({ username: '', role: 'Officer', name: 'User' });
 
@@ -509,9 +664,7 @@ const Dashboard = () => {
 
                 {/* Right: Status Badge & small Detail Button */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
-                  <span className={`badge badge-${p.status ? p.status.toLowerCase() : 'cold'}`} style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.02em', minWidth: '42px', textAlign: 'center' }}>
-                    {p.status || 'Cold'}
-                  </span>
+                  {renderStatusBadge(p.status)}
                   <button 
                     type="button"
                     className="btn btn-outline" 
@@ -571,9 +724,7 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
-                  <span className={`badge badge-${p.status ? p.status.toLowerCase() : 'cold'}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 800 }}>
-                    {p.status || 'Cold'}
-                  </span>
+                  {renderStatusBadge(p.status)}
                   <button 
                     type="button"
                     className="btn btn-outline"
