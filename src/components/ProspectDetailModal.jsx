@@ -508,7 +508,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
               flexDirection: 'column', 
               gap: '0.75rem', 
               position: 'relative', 
-              maxHeight: '190px',
+              maxHeight: '125px',
               overflowY: 'auto',
               boxSizing: 'border-box'
             }}>
