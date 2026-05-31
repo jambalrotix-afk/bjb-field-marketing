@@ -374,14 +374,14 @@ const ClientDirectory = () => {
             <button
               onClick={() => setViewMode('table')}
               className={`tab-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
-              style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
+              title="Tampilan List"
             >
               List
             </button>
             <button
               onClick={() => setViewMode('card')}
               className={`tab-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
-              style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
+              title="Tampilan Kartu"
             >
               Card
             </button>
