@@ -392,9 +392,39 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Phone size={14} style={{ color: 'var(--bjb-blue)', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '90px', fontWeight: 500 }}>No. Telepon:</span>
-                <a href={formatWhatsAppUrl(p.phone)} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: 'var(--bjb-blue)', fontWeight: 700, textDecoration: 'none' }}>
-                  {p.phone} (WhatsApp)
-                </a>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <a href={`tel:${p.phone}`} style={{ fontSize: '0.85rem', color: 'var(--bjb-blue)', fontWeight: 700, textDecoration: 'none' }} title="Telepon Langsung">
+                    {p.phone}
+                  </a>
+                  <a 
+                    href={formatWhatsAppUrl(p.phone)} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    title="Hubungi via WhatsApp"
+                    style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      padding: '0.25rem',
+                      backgroundColor: 'rgba(37, 211, 102, 0.12)',
+                      borderRadius: '50%',
+                      transition: 'all 0.2s ease',
+                      lineHeight: 0
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(37, 211, 102, 0.25)';
+                      e.currentTarget.style.transform = 'scale(1.15)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(37, 211, 102, 0.12)';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style={{ color: '#25D366' }}>
+                      <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.347a9.96 9.96 0 0 0 4.887 1.277h.005c5.505 0 9.989-4.478 9.99-9.985C22 6.478 17.517 2 12.012 2zm4.7 13.916c-.223.63-1.29 1.233-1.78 1.282-.44.043-.102.26-2.585-.722-2.73-1.08-4.48-3.863-4.616-4.046-.137-.183-1.108-1.472-1.108-2.81 0-1.337.697-1.996.944-2.26.248-.263.546-.329.728-.329l.52.003c.125 0 .292-.047.457.348.17.408.583 1.423.633 1.527.05.105.083.227.013.368-.07.14-.105.228-.21.35-.105.122-.22.272-.315.365-.104.103-.213.216-.09.428.122.21.543.896 1.164 1.448.8.71 1.472.93 1.68 1.02.207.09.328.075.45-.067.12-.14.52-.607.66-.814.137-.207.273-.173.46-.104.187.07 1.185.56 1.388.662.204.102.34.152.39.238.05.085.05.495-.173 1.125z"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
