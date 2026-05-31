@@ -1277,8 +1277,8 @@ tr:hover td {
 
 .timeline-progress-line {
   position: absolute;
-  left: 2.2rem;
-  right: 2.2rem;
+  left: 10%;
+  right: 10%;
   top: calc(1.25rem + 14px);
   height: 4px;
   background-color: var(--border-light);
@@ -1301,7 +1301,8 @@ tr:hover td {
   position: relative;
   z-index: 2;
   cursor: pointer;
-  width: 60px;
+  flex: 1;
+  min-width: 0;
   text-align: center;
 }
 
@@ -1388,12 +1389,12 @@ tr:hover td {
 /* Stepper Stepper Layout media query */
 @media (min-width: 768px) {
   .pipeline-timeline-stepper {
-    padding: 0.65rem 3rem;
+    padding: 1.25rem 3rem;
   }
   .timeline-progress-line {
-    left: 4.2rem;
-    right: 4.2rem;
-    top: calc(0.65rem + 14px);
+    left: 10%;
+    right: 10%;
+    top: calc(1.25rem + 14px);
   }
 }
 
