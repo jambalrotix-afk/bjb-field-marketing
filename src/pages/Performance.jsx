@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getAllProspects, getTimelineTargets, saveTimelineTargets, getActiveMemo, saveActiveMemo } from '../services/db';
-import { BarChart3, Filter, Search, Target, Table, Crown, Compass, Printer, FileSpreadsheet, Settings, Hash, DollarSign } from '../components/Icons';
+import { getAllProspects, getTimelineTargets } from '../services/db';
+import { BarChart3, Filter, Search, Target, Table, Crown, Compass, Printer, FileSpreadsheet, Hash, DollarSign } from '../components/Icons';
 import CustomSelect from '../components/CustomSelect';
 import Toast from '../components/Toast';
 
@@ -33,50 +33,15 @@ const Performance = () => {
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
 
-  // 📢 Memo & Targets Configuration States
+  // 📢 Targets Configuration State
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const [timelineTargets, setTimelineTargets] = useState({
     timeline: 'Juni 2026',
     targetKredit: 500000000,
     targetFunding: 1500000000
   });
-  const [activeMemo, setActiveMemo] = useState({ title: '', content: '' });
 
-  // Form Field Input States
-  const [memoTitle, setMemoTitle] = useState('');
-  const [memoContent, setMemoContent] = useState('');
-  const [memoRecipient, setMemoRecipient] = useState('all');
-  const [targetTimeline, setTargetTimeline] = useState('');
-  const [targetKreditInput, setTargetKreditInput] = useState('');
-  const [targetFundingInput, setTargetFundingInput] = useState('');
-
-  const [officers, setOfficers] = useState([
-    { username: 'officer', name: 'Asep Marketing' },
-    { username: 'officer_siti', name: 'Siti Funding' },
-    { username: 'officer_budi', name: 'Budi Kredit' }
-  ]);
-
-  const recipientOptions = [
-    { value: 'all', label: 'Semua Officer (Siaran / Broadcast)' },
-    ...officers.map(off => ({ value: off.username, label: `${off.name} (${off.username})` }))
-  ];
-
-  // Helper to format input real-time with dot thousand separators
-  const formatNumberString = (value) => {
-    if (value === null || value === undefined) return '';
-    const clean = value.toString().replace(/[^0-9]/g, '');
-    if (!clean) return '';
-    return new Intl.NumberFormat('id-ID').format(parseInt(clean, 10));
-  };
-
-  // Helper to convert formatted string back to a clean number for DB storage
-  const parseStringToNumber = (valueStr) => {
-    if (!valueStr) return 0;
-    const clean = valueStr.toString().replace(/\./g, '');
-    return parseInt(clean, 10) || 0;
-  };
-
-  const loadData = async (recipient = memoRecipient) => {
+  const loadData = async () => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -84,76 +49,19 @@ const Performance = () => {
     const data = await getAllProspects();
     setProspects(data);
 
-    // Fetch registered officers for the memo recipient dropdown
-    const usersStr = localStorage.getItem('bjb-users');
-    if (usersStr) {
-      const allUsers = JSON.parse(usersStr);
-      const officerList = allUsers.filter(u => u.role === 'Officer');
-      setOfficers(officerList);
-    }
-
     // Fetch and populate dynamic target timeline configuration
     const activeTargets = getTimelineTargets();
     if (activeTargets) {
       setTimelineTargets(activeTargets);
-      setTargetTimeline(activeTargets.timeline);
-      // Store formatted string with dots in the input states
-      setTargetKreditInput(formatNumberString(activeTargets.targetKredit));
-      setTargetFundingInput(formatNumberString(activeTargets.targetFunding));
-    }
-
-    // Fetch and populate active memo broadcast
-    const memo = getActiveMemo(recipient);
-    if (memo) {
-      setActiveMemo(memo);
-      setMemoTitle(memo.title);
-      setMemoContent(memo.content);
-    } else {
-      setActiveMemo({ title: '', content: '' });
-      setMemoTitle('');
-      setMemoContent('');
-    }
-  };
-
-  const handleSaveMemo = (e) => {
-    e.preventDefault();
-    if (!memoTitle.trim() || !memoContent.trim()) {
-      setToast({ show: true, message: 'Harap lengkapi judul dan isi memo!', type: 'error' });
-      return;
-    }
-    const success = saveActiveMemo(memoTitle, memoContent, user.name || user.username, memoRecipient);
-    if (success) {
-      setToast({ show: true, message: `Memo berhasil dipublikasikan khusus untuk ${memoRecipient === 'all' ? 'Seluruh Sales' : memoRecipient}!`, type: 'success' });
-      loadData(memoRecipient);
-    } else {
-      setToast({ show: true, message: 'Gagal mempublikasikan memo.', type: 'error' });
-    }
-  };
-
-  const handleSaveTargets = (e) => {
-    e.preventDefault();
-    const kreditNum = parseStringToNumber(targetKreditInput);
-    const fundingNum = parseStringToNumber(targetFundingInput);
-
-    if (!targetTimeline.trim() || !kreditNum || !fundingNum) {
-      setToast({ show: true, message: 'Harap lengkapi semua bidang target!', type: 'error' });
-      return;
-    }
-    const success = saveTimelineTargets(targetTimeline, kreditNum, fundingNum);
-    if (success) {
-      setToast({ show: true, message: 'Pengaturan target & timeline berhasil disimpan!', type: 'success' });
-      loadData(memoRecipient);
-    } else {
-      setToast({ show: true, message: 'Gagal menyimpan pengaturan target.', type: 'error' });
     }
   };
 
   useEffect(() => {
-    loadData(memoRecipient);
-    const onFocus = () => loadData(memoRecipient);
+    loadData();
+    const onFocus = () => loadData();
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
-  }, [memoRecipient]);
+  }, []);
 
   // Geographical Hotspot clustering algorithm
   const getGeographicalHotspots = () => {
@@ -472,8 +380,8 @@ const Performance = () => {
         )}
       </div>
 
-      {/* Tabs Menu – 2×2 grid on mobile, single row on desktop */}
-      <div className="tab-toggle-grid hide-print" style={{ marginBottom: 'var(--space-y)' }}>
+      {/* Tabs Menu – 3 items in standard tab-toggle flex bar */}
+      <div className="tab-toggle hide-print" style={{ marginBottom: 'var(--space-y)' }}>
         <button 
           onClick={() => setActiveTab('grafik')} 
           className={`tab-toggle-btn ${activeTab === 'grafik' ? 'active' : ''}`}
@@ -494,13 +402,6 @@ const Performance = () => {
         >
           <Table size={16} />
           <span>Tabel</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('settings')} 
-          className={`tab-toggle-btn ${activeTab === 'settings' ? 'active' : ''}`}
-        >
-          <Settings size={16} />
-          <span>Memo & Target</span>
         </button>
       </div>
 
@@ -822,120 +723,7 @@ const Performance = () => {
         </>
       )}
 
-      {/* Tab: KELOLA MEMO & TARGET (settings) */}
-      {activeTab === 'settings' && (
-        <div className="hide-print" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-y)', animation: 'fadeIn 0.25s ease-out' }}>
-          
-          {/* Memo Broadcast Form */}
-          <div className="card" style={{ padding: '1.5rem' }}>
-            <h3 className="card-title" style={{ fontSize: '1.05rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '1.25rem' }}>📢</span>
-              Kirim Memo & Pesan Satu Arah
-            </h3>
-            <p className="text-muted text-xs" style={{ marginBottom: '1.25rem', lineHeight: 1.45 }}>
-              Kirim pengumuman, instruksi taktis, atau pesan khusus satu arah yang akan disiarkan langsung di bagian atas Dashboard untuk **Semua Officer** atau **Officer terpilih**.
-            </p>
-            <form onSubmit={handleSaveMemo}>
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label" style={{ fontSize: '0.82rem', fontWeight: 700 }}>Pilih Penerima Memo</label>
-                <CustomSelect 
-                  value={memoRecipient}
-                  onChange={(e) => setMemoRecipient(e.target.value)}
-                  options={recipientOptions}
-                  style={{ height: '42px', fontSize: '0.88rem' }}
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label" style={{ fontSize: '0.82rem', fontWeight: 700 }}>Judul Pengumuman / Memo</label>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  placeholder="Contoh: PENGUMUMAN AKAD MASSAL JUNI" 
-                  value={memoTitle} 
-                  onChange={(e) => setMemoTitle(e.target.value)} 
-                  style={{ height: '42px', fontSize: '0.88rem', boxSizing: 'border-box' }}
-                  required
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="form-label" style={{ fontSize: '0.82rem', fontWeight: 700 }}>Isi Memo / Pesan</label>
-                <textarea 
-                  className="form-textarea" 
-                  placeholder="Tulis instruksi taktis atau pesan khusus untuk sales lapangan disini..." 
-                  value={memoContent} 
-                  onChange={(e) => setMemoContent(e.target.value)} 
-                  style={{ minHeight: '90px', fontSize: '0.88rem', boxSizing: 'border-box', padding: '0.6rem 0.8rem' }}
-                  required
-                />
-              </div>
-              <button type="submit" className="btn btn-secondary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.88rem' }}>
-                📢 Publikasikan Memo Sekarang
-              </button>
-            </form>
-          </div>
-
-          {/* Target Timeline Configuration Form */}
-          <div className="card" style={{ padding: '1.5rem' }}>
-            <h3 className="card-title" style={{ fontSize: '1.05rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '1.2rem' }}>🎯</span>
-              Pengaturan Target Capaian & Periode Timeline
-            </h3>
-            <p className="text-muted text-xs" style={{ marginBottom: '1.25rem', lineHeight: 1.45 }}>
-              Atur target volume transaksi (plafond Kredit dan nominal Funding) serta tentukan periode target aktif yang sedang berjalan.
-            </p>
-            <form onSubmit={handleSaveTargets}>
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label" style={{ fontSize: '0.82rem', fontWeight: 700 }}>Periode Aktif Target (Timeline)</label>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  placeholder="Contoh: Juni 2026" 
-                  value={targetTimeline} 
-                  onChange={(e) => setTargetTimeline(e.target.value)} 
-                  style={{ height: '42px', fontSize: '0.88rem', boxSizing: 'border-box' }}
-                  required
-                />
-              </div>
-              {/* Responsive grid: 2 columns on desktop, stacks vertically on mobile so labels stay on 1 line */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label" style={{ fontSize: '0.82rem', fontWeight: 700, whiteSpace: 'nowrap' }}>Target Kredit (Plafond)</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="Contoh: 500.000.000" 
-                    value={targetKreditInput} 
-                    onChange={(e) => setTargetKreditInput(formatNumberString(e.target.value))} 
-                    style={{ height: '42px', fontSize: '0.88rem', boxSizing: 'border-box' }}
-                    required
-                  />
-                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 600 }}>
-                    Setara: {formatRupiah(parseStringToNumber(targetKreditInput))}
-                  </span>
-                </div>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label" style={{ fontSize: '0.82rem', fontWeight: 700, whiteSpace: 'nowrap' }}>Target Funding (Dana)</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
-                    placeholder="Contoh: 1.500.000.000" 
-                    value={targetFundingInput} 
-                    onChange={(e) => setTargetFundingInput(formatNumberString(e.target.value))} 
-                    style={{ height: '42px', fontSize: '0.88rem', boxSizing: 'border-box' }}
-                    required
-                  />
-                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px', fontWeight: 600 }}>
-                    Setara: {formatRupiah(parseStringToNumber(targetFundingInput))}
-                  </span>
-                </div>
-              </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.88rem' }}>
-                🎯 Simpan & Terapkan Target Baru
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Tab: KELOLA MEMO & TARGET (settings) removed & moved to separate Broadcast & Settings screens */}
 
       {/* 5. PRINT READY OFFICIAL SIGNATURE AREA (Hidden on Screen, Visible on Print) */}
       <div className="print-signature-area" style={{ display: 'none' }}>

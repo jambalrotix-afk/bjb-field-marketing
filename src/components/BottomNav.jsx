@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { NavLink, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, Kanban, FilePlus2, BarChart3, Users, History, Folder, MoreHorizontal, X } from './Icons';
+import { LayoutDashboard, Kanban, FilePlus2, BarChart3, Users, History, Folder, MoreHorizontal, X, Megaphone, Settings } from './Icons';
 import { getAllProspects } from '../services/db';
 
 const BottomNav = () => {
@@ -64,7 +64,7 @@ const BottomNav = () => {
   }, [location]);
 
   // Check if any of the hidden drawer pages are currently active to highlight the "Lainnya" tab
-  const isMoreActive = ['/directory', '/users', '/logs'].includes(location.pathname);
+  const isMoreActive = ['/directory', '/users', '/logs', '/broadcast', '/settings'].includes(location.pathname);
 
   return (
     <>
@@ -186,6 +186,28 @@ const BottomNav = () => {
                   </div>
                   <span className="more-sheet-item-label">Aktivitas</span>
                   <span className="more-sheet-item-desc">Log riwayat sistem</span>
+                </Link>
+              )}
+
+              {/* Broadcast - Manager & Super Admin */}
+              {(role === 'Manager' || role === 'Super Admin') && (
+                <Link to="/broadcast" className="more-sheet-item">
+                  <div className="more-sheet-item-icon">
+                    <Megaphone size={20} />
+                  </div>
+                  <span className="more-sheet-item-label">Broadcast</span>
+                  <span className="more-sheet-item-desc">Kirim memo satu arah</span>
+                </Link>
+              )}
+
+              {/* Settings - Manager & Super Admin */}
+              {(role === 'Manager' || role === 'Super Admin') && (
+                <Link to="/settings" className="more-sheet-item">
+                  <div className="more-sheet-item-icon">
+                    <Settings size={20} />
+                  </div>
+                  <span className="more-sheet-item-label">Settings</span>
+                  <span className="more-sheet-item-desc">Atur target & timeline</span>
                 </Link>
               )}
             </div>

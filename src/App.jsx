@@ -10,6 +10,8 @@ import ActivityLogs from './pages/ActivityLogs';
 import Login from './pages/Login';
 import Pipeline from './pages/Pipeline';
 import ClientDirectory from './pages/ClientDirectory';
+import Broadcast from './pages/Broadcast';
+import Settings from './pages/Settings';
 
 // Dedicated pipeline routes added
 // Router protection helper for authenticated routes
@@ -129,6 +131,26 @@ function App() {
               <ProtectedRoute>
                 <ProtectedManagerRoute>
                   <ActivityLogs />
+                </ProtectedManagerRoute>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/broadcast" 
+            element={
+              <ProtectedRoute>
+                <ProtectedManagerRoute>
+                  <Broadcast />
+                </ProtectedManagerRoute>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <ProtectedRoute>
+                <ProtectedManagerRoute>
+                  <Settings />
                 </ProtectedManagerRoute>
               </ProtectedRoute>
             } 

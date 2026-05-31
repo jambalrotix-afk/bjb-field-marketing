@@ -108,6 +108,18 @@ const ClientDirectory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('table'); // 'table' or 'card'
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [isViewTransitioning, setIsViewTransitioning] = useState(false);
+
+  const handleViewModeChange = (mode) => {
+    if (mode === viewMode || isViewTransitioning) return;
+    setIsViewTransitioning(true);
+    setTimeout(() => {
+      setViewMode(mode);
+      setTimeout(() => {
+        setIsViewTransitioning(false);
+      }, 50);
+    }, 150);
+  };
   const [selectedProspect, setSelectedProspect] = useState(null);
 
   // Statistics
@@ -375,7 +387,7 @@ const ClientDirectory = () => {
           {/* List/Card Mode Toggle */}
           <div className="tab-toggle" style={{ width: 'auto', height: '34px', padding: '2px', boxSizing: 'border-box', display: 'flex', alignItems: 'stretch' }}>
             <button
-              onClick={() => setViewMode('table')}
+              onClick={() => handleViewModeChange('table')}
               className={`tab-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
               title="Tampilan List"
               style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
@@ -384,7 +396,7 @@ const ClientDirectory = () => {
               <span>List</span>
             </button>
             <button
-              onClick={() => setViewMode('card')}
+              onClick={() => handleViewModeChange('card')}
               className={`tab-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
               title="Tampilan Kartu"
               style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
@@ -482,122 +494,143 @@ const ClientDirectory = () => {
         <div className="card text-center text-muted" style={{ padding: '2.5rem' }}>
           Data prospek / klien tidak ditemukan.
         </div>
-      ) : viewMode === 'table' ? (
-        <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
-          {currentItems.map((p, index) => {
-            const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
-            const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
-            
-            return (
-              <div 
-                key={p.id} 
-                className="prospect-row"
-                onClick={() => setSelectedProspect(p)}
-                style={{
-                  borderBottom: index < currentItems.length - 1 ? '1px solid var(--border-light)' : 'none'
-                }}
-              >
-                {/* Left: Name & Metas inline to look highly compact and perfectly aligned */}
-                <div className="prospect-row-info">
-                  {/* Column 1: Client Name & Badges */}
-                  <div className="prospect-row-name-col">
-                    <div className="prospect-row-name" title={p.name}>
-                      {p.name}
-                    </div>
-                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
-                  </div>
-                  
-                  {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
-                  <div className="prospect-row-category-col">
-                    <span className={`prospect-row-category ${p.category === 'Kredit' ? 'prospect-row-category-kredit' : 'prospect-row-category-funding'}`}>
-                      {p.category}
-                    </span>
-                  </div>
-                  
-                  {/* Column 3: Nominal Value - Aligned perfectly */}
-                  <div className="prospect-row-nominal-col">
-                    <span className="prospect-row-nominal">
-                      {formatRupiah(estimasi)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Right: Status Badge & small Detail Button */}
-                <div className="prospect-row-actions" onClick={(e) => e.stopPropagation()}>
-                  {renderStatusBadge(p.status)}
-                  <button 
-                    type="button"
-                    className="btn btn-outline" 
-                    style={{ padding: '0.2rem 0.45rem', fontSize: '0.68rem', width: 'auto', minHeight: 'auto', margin: 0, fontWeight: 700, borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    onClick={() => setSelectedProspect(p)}
-                    title="Detail"
-                  >
-                    <Eye size={16} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
-          {currentItems.map(p => {
-            const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
-            const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
-
-            return (
-              <div 
-                key={p.id} 
-                className="card card-prospect clickable"
-                onClick={() => setSelectedProspect(p)}
-                style={{ 
-                  cursor: 'pointer', 
-                  transition: 'all 0.2s', 
-                  padding: '1rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  marginBottom: 0,
-                  backgroundColor: '#ffffff', // Explicitly white background!
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)'
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--bjb-blue-dark)' }}>
-                      {p.name}
-                    </div>
-                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
-                  </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
-                    <span style={{ fontWeight: 600 }}>{p.category}</span>
-                    <span>•</span>
-                    <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 700 }}>{formatRupiah(estimasi)}</span>
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    Sales: {salesName}
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
-                  <span className={`badge ${getStatusBadgeClass(p.status)}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 800 }}>
-                    {p.status || 'Sosialisasi'}
-                  </span>
-                  <button 
-                    type="button"
-                    className="btn btn-outline"
-                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', width: 'auto', minHeight: 'auto', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        <div style={{
+          opacity: isViewTransitioning ? 0 : 1,
+          transform: isViewTransitioning ? 'translateY(8px)' : 'translateY(0)',
+          transition: 'opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+          willChange: 'opacity, transform'
+        }}>
+          {viewMode === 'table' ? (
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              backgroundColor: 'var(--surface)', 
+              border: '1px solid var(--border)', 
+              borderRadius: '12px', 
+              overflow: 'hidden', 
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              {currentItems.map((p, index) => {
+                const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
+                const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
+                
+                return (
+                  <div 
+                    key={p.id} 
+                    className="prospect-row"
                     onClick={() => setSelectedProspect(p)}
-                    title="Detail"
+                    style={{
+                      borderBottom: index < currentItems.length - 1 ? '1px solid var(--border-light)' : 'none'
+                    }}
                   >
-                    <Eye size={16} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    {/* Left: Name & Metas inline to look highly compact and perfectly aligned */}
+                    <div className="prospect-row-info">
+                      {/* Column 1: Client Name & Badges */}
+                      <div className="prospect-row-name-col">
+                        <div className="prospect-row-name" title={p.name}>
+                          {p.name}
+                        </div>
+                        {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
+                      </div>
+                      
+                      {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
+                      <div className="prospect-row-category-col">
+                        <span className={`prospect-row-category ${p.category === 'Kredit' ? 'prospect-row-category-kredit' : 'prospect-row-category-funding'}`}>
+                          {p.category}
+                        </span>
+                      </div>
+                      
+                      {/* Column 3: Nominal Value - Aligned perfectly */}
+                      <div className="prospect-row-nominal-col">
+                        <span className="prospect-row-nominal">
+                          {formatRupiah(estimasi)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Right: Status Badge & small Detail Button */}
+                    <div className="prospect-row-actions" onClick={(e) => e.stopPropagation()}>
+                      {renderStatusBadge(p.status)}
+                      <button 
+                        type="button"
+                        className="btn btn-outline" 
+                        style={{ padding: '0.2rem 0.45rem', fontSize: '0.68rem', width: 'auto', minHeight: 'auto', margin: 0, fontWeight: 700, borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        onClick={() => setSelectedProspect(p)}
+                        title="Detail"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr', 
+              gap: '0.75rem'
+            }}>
+              {currentItems.map(p => {
+                const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
+                const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
+
+                return (
+                  <div 
+                    key={p.id} 
+                    className="card card-prospect clickable"
+                    onClick={() => setSelectedProspect(p)}
+                    style={{ 
+                      cursor: 'pointer', 
+                      transition: 'all 0.2s', 
+                      padding: '1rem',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      marginBottom: 0,
+                      backgroundColor: '#ffffff', // Explicitly white background!
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius)'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--bjb-blue-dark)' }}>
+                          {p.name}
+                        </div>
+                        {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
+                        <span style={{ fontWeight: 600 }}>{p.category}</span>
+                        <span>•</span>
+                        <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 700 }}>{formatRupiah(estimasi)}</span>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                        Sales: {salesName}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
+                      <span className={`badge ${getStatusBadgeClass(p.status)}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 800 }}>
+                        {p.status || 'Sosialisasi'}
+                      </span>
+                      <button 
+                        type="button"
+                        className="btn btn-outline"
+                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', width: 'auto', minHeight: 'auto', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        onClick={() => setSelectedProspect(p)}
+                        title="Detail"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

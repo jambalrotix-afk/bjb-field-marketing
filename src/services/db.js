@@ -493,3 +493,32 @@ export const saveTimelineTargets = (timeline, targetKredit, targetFunding) => {
   }
 };
 
+export const getTargetAlertSettings = () => {
+  try {
+    const alertStr = localStorage.getItem('bjb-target-alerts');
+    return alertStr ? JSON.parse(alertStr) : {
+      alertEnabled: true,
+      alertThreshold: 70
+    };
+  } catch (e) {
+    console.error('Failed to get target alert settings:', e);
+    return { alertEnabled: true, alertThreshold: 70 };
+  }
+};
+
+export const saveTargetAlertSettings = (alertEnabled, alertThreshold) => {
+  try {
+    const alertData = {
+      alertEnabled: Boolean(alertEnabled),
+      alertThreshold: Number(alertThreshold)
+    };
+    localStorage.setItem('bjb-target-alerts', JSON.stringify(alertData));
+    writeLog('SET_TARGET_ALERTS', `Mengubah pengaturan alert target (Aktif: ${alertEnabled ? 'Ya' : 'Tidak'}, Batas: ${alertThreshold}%)`);
+    return true;
+  } catch (e) {
+    console.error('Failed to save target alert settings:', e);
+    return false;
+  }
+};
+
+

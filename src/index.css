@@ -840,6 +840,27 @@ tr:hover td {
   background: #94A3B8;
 }
 
+/* Custom Scrollbar for Dropdown Menus */
+.custom-select-options-list::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-select-options-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+}
+.custom-select-options-list::-webkit-scrollbar-thumb {
+  background: rgba(10, 46, 92, 0.25);
+  border-radius: 6px;
+}
+.custom-select-options-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 46, 92, 0.45);
+}
+.custom-select-options-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(10, 46, 92, 0.25) rgba(0, 0, 0, 0.02);
+}
+
+
 /* Utilities */
 .text-center { text-align: center; }
 .text-right { text-align: right; }

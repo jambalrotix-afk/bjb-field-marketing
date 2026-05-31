@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getAllProspects, updateProspectStatus, getActiveMemo, getTimelineTargets, markMemoAsRead } from '../services/db';
+import { getAllProspects, updateProspectStatus, getActiveMemo, getTimelineTargets, markMemoAsRead, getTargetAlertSettings } from '../services/db';
 import { FileSpreadsheet, Eye, LayoutList, LayoutGrid, Heart } from '../components/Icons';
 
 import Toast from '../components/Toast';
@@ -124,6 +124,7 @@ const Dashboard = () => {
     targetKredit: 500000000,
     targetFunding: 1500000000
   });
+  const [alertSettings, setAlertSettings] = useState({ alertEnabled: true, alertThreshold: 70 });
 
   // Search & Filter State
   const [showFilters, setShowFilters] = useState(false);
@@ -135,6 +136,18 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('table'); // 'table' or 'card'
   const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [isViewTransitioning, setIsViewTransitioning] = useState(false);
+
+  const handleViewModeChange = (mode) => {
+    if (mode === viewMode || isViewTransitioning) return;
+    setIsViewTransitioning(true);
+    setTimeout(() => {
+      setViewMode(mode);
+      setTimeout(() => {
+        setIsViewTransitioning(false);
+      }, 50);
+    }, 150);
+  };
 
   // Selected Prospect State for Detail Modal
   const [selectedProspect, setSelectedProspect] = useState(null);
@@ -158,6 +171,8 @@ const Dashboard = () => {
     setActiveMemo(memo);
     const targets = getTimelineTargets();
     setTimelineTargets(targets);
+    const alertSets = getTargetAlertSettings();
+    setAlertSettings(alertSets);
 
     const data = await getAllProspects();
     
@@ -337,6 +352,7 @@ const Dashboard = () => {
 
   const pctKredit = timelineTargets.targetKredit > 0 ? Math.round((achievedKredit / timelineTargets.targetKredit) * 100) : 0;
   const pctFunding = timelineTargets.targetFunding > 0 ? Math.round((achievedFunding / timelineTargets.targetFunding) * 100) : 0;
+  const isTargetMet = pctKredit >= 100 && pctFunding >= 100;
 
   return (
     <div className="main-content">
@@ -437,21 +453,37 @@ const Dashboard = () => {
         {user.role === 'Officer' && (
           <div className="card" style={{ 
             padding: '1.15rem', 
-            background: 'linear-gradient(135deg, var(--bjb-blue), var(--bjb-blue-dark))', 
+            background: isTargetMet ? 'linear-gradient(135deg, #064e3b, #047857)' : 'linear-gradient(135deg, var(--bjb-blue), var(--bjb-blue-dark))', 
             color: 'white',
-            border: 'none',
+            border: isTargetMet ? '2px solid var(--bjb-gold)' : 'none',
             marginBottom: 0,
-            boxShadow: 'var(--shadow-md)'
+            boxShadow: isTargetMet ? '0 10px 25px -5px rgba(16, 185, 129, 0.3)' : 'var(--shadow-md)',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
+            {/* Victory background pattern overlay */}
+            {isTargetMet && (
+              <div style={{
+                position: 'absolute',
+                top: '-20px',
+                right: '-20px',
+                opacity: 0.15,
+                transform: 'rotate(25deg)',
+                pointerEvents: 'none',
+                fontSize: '6rem'
+              }}>
+                🏆
+              </div>
+            )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '1.2rem' }}>🎯</span>
-                <h4 style={{ margin: 0, fontSize: '0.92rem', color: 'var(--bjb-gold-light)', fontFamily: 'Outfit, sans-serif', fontWeight: 700 }}>
-                  Target Capaian Periode: {timelineTargets.timeline}
+                <span style={{ fontSize: '1.25rem' }}>{isTargetMet ? '🏆' : '🎯'}</span>
+                <h4 style={{ margin: 0, fontSize: '0.92rem', color: isTargetMet ? 'var(--bjb-gold)' : 'var(--bjb-gold-light)', fontFamily: 'Outfit, sans-serif', fontWeight: 700 }}>
+                  {isTargetMet ? 'Target Periode Tercapai!' : `Target Capaian Periode: ${timelineTargets.timeline}`}
                 </h4>
               </div>
-              <span className="badge" style={{ backgroundColor: 'rgba(255,255,255,0.15)', color: 'white', border: 'none', fontSize: '0.65rem', fontWeight: 700 }}>
-                Target bjb
+              <span className="badge" style={{ backgroundColor: isTargetMet ? 'rgba(212,175,55,0.25)' : 'rgba(255,255,255,0.15)', color: isTargetMet ? 'var(--bjb-gold)' : 'white', border: isTargetMet ? '1px solid var(--bjb-gold)' : 'none', fontSize: '0.65rem', fontWeight: 800 }}>
+                {isTargetMet ? '👑 CHAMPION' : 'Target bjb'}
               </span>
             </div>
 
@@ -475,9 +507,56 @@ const Dashboard = () => {
                 </div>
                 <div style={{ backgroundColor: 'rgba(255,255,255,0.15)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                   <div style={{ backgroundColor: '#10B981', width: `${Math.min(pctFunding, 100)}%`, height: '100%' }} />
-                </div>
               </div>
             </div>
+
+            {/* Target Alert Banner */}
+            {alertSettings.alertEnabled && (pctKredit < alertSettings.alertThreshold || pctFunding < alertSettings.alertThreshold) && (
+              <div style={{ 
+                marginTop: '12px', 
+                padding: '0.65rem 0.85rem', 
+                backgroundColor: 'rgba(212, 175, 55, 0.15)', 
+                border: '1px solid rgba(212, 175, 55, 0.4)', 
+                borderRadius: '8px', 
+                fontSize: '0.74rem', 
+                color: 'var(--bjb-gold-light)', 
+                display: 'flex', 
+                alignItems: 'flex-start',
+                gap: '8px',
+                fontWeight: 600,
+                lineHeight: 1.35
+              }}>
+                <span style={{ fontSize: '0.95rem', lineHeight: 1 }}>⚠️</span>
+                <span>
+                  Peringatan: Pencapaian target Anda ({pctKredit < alertSettings.alertThreshold ? `Kredit ${pctKredit}%` : ''}{pctKredit < alertSettings.alertThreshold && pctFunding < alertSettings.alertThreshold ? ' & ' : ''}{pctFunding < alertSettings.alertThreshold ? `Funding ${pctFunding}%` : ''}) masih di bawah batas minimal {alertSettings.alertThreshold}%. Segera tindaklanjuti prospek Anda!
+                </span>
+              </div>
+            )}
+
+            {/* Celebration Success Banner */}
+            {pctKredit >= 100 && pctFunding >= 100 && (
+              <div style={{ 
+                marginTop: '12px', 
+                padding: '0.65rem 0.85rem', 
+                backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+                border: '1.5px solid var(--bjb-gold)', 
+                borderRadius: '8px', 
+                fontSize: '0.74rem', 
+                color: 'white', 
+                display: 'flex', 
+                alignItems: 'flex-start',
+                gap: '8px',
+                fontWeight: 700,
+                lineHeight: 1.4,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+              }}>
+                <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>🎉</span>
+                <span>
+                  Selamat! Target Kredit & Funding Anda periode ini telah terpenuhi 100%+. Terus tingkatkan prestasi luar biasa Anda dan pertahankan kinerja terbaik!
+                </span>
+              </div>
+            )}
+          </div>
           </div>
         )}
       </div>
@@ -524,7 +603,7 @@ const Dashboard = () => {
           {/* View Mode Toggle */}
           <div className="tab-toggle" style={{ width: 'auto', height: '34px', padding: '2px', boxSizing: 'border-box', display: 'flex', alignItems: 'stretch' }}>
             <button
-              onClick={() => setViewMode('table')}
+              onClick={() => handleViewModeChange('table')}
               className={`tab-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
               title="Tampilan List"
               style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
@@ -533,7 +612,7 @@ const Dashboard = () => {
               <span>List</span>
             </button>
             <button
-              onClick={() => setViewMode('card')}
+              onClick={() => handleViewModeChange('card')}
               className={`tab-toggle-btn ${viewMode === 'card' ? 'active' : ''}`}
               title="Tampilan Kartu"
               style={{ height: '100%', padding: '0 0.65rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'calc(var(--radius) - 3px)' }}
@@ -607,123 +686,144 @@ const Dashboard = () => {
       {/* Prospects List / Table */}
       {filteredProspects.length === 0 ? (
         <div className="card text-center text-muted" style={{ padding: '2rem' }}>Belum ada prospek yang terdaftar.</div>
-      ) : viewMode === 'table' ? (
-        <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
-          {currentProspects.map((p, index) => {
-            const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
-            const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
-            
-            return (
-              <div 
-                key={p.id} 
-                className="prospect-row"
-                onClick={() => setSelectedProspect(p)}
-                style={{
-                  borderBottom: index < currentProspects.length - 1 ? '1px solid var(--border-light)' : 'none'
-                }}
-              >
-                {/* Left: Name & Metas inline to look highly compact and perfectly aligned */}
-                <div className="prospect-row-info">
-                  {/* Column 1: Client Name & Badges */}
-                  <div className="prospect-row-name-col">
-                    <div className="prospect-row-name" title={p.name}>
-                      {p.name}
-                    </div>
-                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
-                  </div>
-                  
-                  {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
-                  <div className="prospect-row-category-col">
-                    <span className={`prospect-row-category ${p.category === 'Kredit' ? 'prospect-row-category-kredit' : 'prospect-row-category-funding'}`}>
-                      {p.category}
-                    </span>
-                  </div>
-                  
-                  {/* Column 3: Nominal Value - Aligned perfectly */}
-                  <div className="prospect-row-nominal-col">
-                    <span className="prospect-row-nominal">
-                      {formatRupiah(estimasi)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Right: Status Badge & small Detail Button */}
-                <div className="prospect-row-actions" onClick={(e) => e.stopPropagation()}>
-                  {renderStatusBadge(p.status)}
-                  <button 
-                    type="button"
-                    className="btn btn-outline" 
-                    style={{ padding: '0.2rem 0.45rem', fontSize: '0.68rem', width: 'auto', minHeight: 'auto', margin: 0, fontWeight: 700, borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    onClick={() => setSelectedProspect(p)}
-                    title="Detail"
-                  >
-                    <Eye size={16} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
-          {currentProspects.map(p => {
-            const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
-            const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
-
-            return (
-              <div 
-                key={p.id} 
-                className="card card-prospect clickable"
-                onClick={() => setSelectedProspect(p)}
-                style={{ 
-                  cursor: 'pointer', 
-                  transition: 'all 0.2s', 
-                  padding: '1rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  marginBottom: 0,
-                  backgroundColor: '#ffffff', // Explicitly white background like data archive cards
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)'
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--bjb-blue-dark)' }}>
-                      {p.name}
-                    </div>
-                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
-                    {(p.status === 'Approval' || p.status === 'Akad') && <span className="badge-urgent">Perlu Tindakan</span>}
-                  </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
-                    <span style={{ fontWeight: 600 }}>{p.category}</span>
-                    <span>•</span>
-                    <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 700 }}>{formatRupiah(estimasi)}</span>
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    Sales: {salesName}
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
-                  <span className={`badge ${getStatusBadgeClass(p.status)}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 800 }}>
-                    {p.status || 'Sosialisasi'}
-                  </span>
-                  <button 
-                    type="button"
-                    className="btn btn-outline"
-                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', width: 'auto', minHeight: 'auto', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        <div style={{
+          opacity: isViewTransitioning ? 0 : 1,
+          transform: isViewTransitioning ? 'translateY(8px)' : 'translateY(0)',
+          transition: 'opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+          willChange: 'opacity, transform'
+        }}>
+          {viewMode === 'table' ? (
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              backgroundColor: 'var(--surface)', 
+              border: '1px solid var(--border)', 
+              borderRadius: '12px', 
+              overflow: 'hidden', 
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              {currentProspects.map((p, index) => {
+                const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
+                const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
+                
+                return (
+                  <div 
+                    key={p.id} 
+                    className="prospect-row"
                     onClick={() => setSelectedProspect(p)}
-                    title="Detail"
+                    style={{
+                      borderBottom: index < currentProspects.length - 1 ? '1px solid var(--border-light)' : 'none'
+                    }}
                   >
-                    <Eye size={16} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    {/* Left: Name & Metas inline to look highly compact and perfectly aligned */}
+                    <div className="prospect-row-info">
+                      {/* Column 1: Client Name & Badges */}
+                      <div className="prospect-row-name-col">
+                        <div className="prospect-row-name" title={p.name}>
+                          {p.name}
+                        </div>
+                        {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
+                      </div>
+                      
+                      {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
+                      <div className="prospect-row-category-col">
+                        <span className={`prospect-row-category ${p.category === 'Kredit' ? 'prospect-row-category-kredit' : 'prospect-row-category-funding'}`}>
+                          {p.category}
+                        </span>
+                      </div>
+                      
+                      {/* Column 3: Nominal Value - Aligned perfectly */}
+                      <div className="prospect-row-nominal-col">
+                        <span className="prospect-row-nominal">
+                          {formatRupiah(estimasi)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Right: Status Badge & small Detail Button */}
+                    <div className="prospect-row-actions" onClick={(e) => e.stopPropagation()}>
+                      {renderStatusBadge(p.status)}
+                      <button 
+                        type="button"
+                        className="btn btn-outline" 
+                        style={{ padding: '0.2rem 0.45rem', fontSize: '0.68rem', width: 'auto', minHeight: 'auto', margin: 0, fontWeight: 700, borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        onClick={() => setSelectedProspect(p)}
+                        title="Detail"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr', 
+              gap: '0.75rem'
+            }}>
+              {currentProspects.map(p => {
+                const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
+                const salesName = p.createdBy === 'officer' ? 'Asep' : p.createdBy === 'officer_siti' ? 'Siti' : p.createdBy === 'officer_budi' ? 'Budi' : p.createdBy;
+
+                return (
+                  <div 
+                    key={p.id} 
+                    className="card card-prospect clickable"
+                    onClick={() => setSelectedProspect(p)}
+                    style={{ 
+                      cursor: 'pointer', 
+                      transition: 'all 0.2s', 
+                      padding: '1rem',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      marginBottom: 0,
+                      backgroundColor: '#ffffff', // Explicitly white background like data archive cards
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius)'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--bjb-blue-dark)' }}>
+                          {p.name}
+                        </div>
+                        {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
+                        {(p.status === 'Approval' || p.status === 'Akad') && <span className="badge-urgent">Perlu Tindakan</span>}
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
+                        <span style={{ fontWeight: 600 }}>{p.category}</span>
+                        <span>•</span>
+                        <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 700 }}>{formatRupiah(estimasi)}</span>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                        Sales: {salesName}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
+                      <span className={`badge ${getStatusBadgeClass(p.status)}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 800 }}>
+                        {p.status || 'Sosialisasi'}
+                      </span>
+                      <button 
+                        type="button"
+                        className="btn btn-outline"
+                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', width: 'auto', minHeight: 'auto', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        onClick={() => setSelectedProspect(p)}
+                        title="Detail"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
