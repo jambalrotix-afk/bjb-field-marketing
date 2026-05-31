@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Phone, MapPin, Calendar, User, TrendingUp, Globe, FileText } from './Icons';
 import PromptModal from './PromptModal';
+import ConfirmModal from './ConfirmModal';
 
 const formatRupiah = (value) => {
   if (!value) return 'Rp 0';
@@ -62,6 +63,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
 
   // State untuk custom prompt modal
   const [promptModal, setPromptModal] = useState({ open: false, type: null });
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const openPrompt = (type) => setPromptModal({ open: true, type });
   const closePrompt = () => setPromptModal({ open: false, type: null });
@@ -702,11 +704,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
             {isSuperAdmin && onDelete && (
               <button
                 type="button"
-                onClick={() => {
-                  if (window.confirm(`Apakah Anda yakin ingin menghapus prospek "${p.name}"? Tindakan ini tidak dapat dibatalkan.`)) {
-                    onDelete(p.id);
-                  }
-                }}
+                onClick={() => setIsDeleteConfirmOpen(true)}
                 className="btn"
                 style={{ 
                   padding: '0.5rem 0.8rem', 
@@ -750,6 +748,21 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
         onConfirm={handlePromptConfirm}
         onCancel={closePrompt}
         cancelText="Kembali"
+      />
+
+      {/* Custom Confirm Modal untuk hapus prospek */}
+      <ConfirmModal
+        isOpen={isDeleteConfirmOpen}
+        title="Hapus Prospek?"
+        message={`Apakah Anda yakin ingin menghapus prospek "${p.name}"? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        type="warning"
+        onConfirm={() => {
+          setIsDeleteConfirmOpen(false);
+          onDelete(p.id);
+        }}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
       />
     </div>,
     document.body
