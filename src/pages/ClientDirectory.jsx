@@ -505,7 +505,6 @@ const ClientDirectory = () => {
                       {p.name}
                     </div>
                     {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
-                    {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
                   
                   {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
@@ -571,7 +570,6 @@ const ClientDirectory = () => {
                       {p.name}
                     </div>
                     {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
-                    {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '0.2rem' }}>
                     <span style={{ fontWeight: 600 }}>{p.category}</span>
