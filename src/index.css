@@ -1267,7 +1267,7 @@ tr:hover td {
   align-items: flex-start;
   position: relative;
   margin-bottom: var(--space-y);
-  padding: 0.5rem 1rem;
+  padding: 1.25rem 1rem;
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -1279,7 +1279,7 @@ tr:hover td {
   position: absolute;
   left: 2.2rem;
   right: 2.2rem;
-  top: calc(0.5rem + 14px);
+  top: calc(1.25rem + 14px);
   height: 4px;
   background-color: var(--border-light);
   z-index: 1;

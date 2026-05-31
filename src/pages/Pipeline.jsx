@@ -232,14 +232,18 @@ const Pipeline = () => {
           const isCompleted = stageOrder.indexOf(st.key) < stageOrder.indexOf(activeStage);
           
           const getStageColor = (key) => {
-            if (key === 'Sosialisasi') return 'var(--status-cold)';
-            if (key === 'Pemberkasan' || key === 'Analisa') return 'var(--status-warm)';
-            return 'var(--status-hot)';
+            if (key === 'Sosialisasi') return '#a855f7';   // Purple
+            if (key === 'Pemberkasan') return '#eab308';   // Yellow
+            if (key === 'Analisa') return '#06b6d4';       // Cyan/Teal
+            if (key === 'Approval') return '#84cc16';      // Lime Green
+            return '#10b981';                              // Akad (Emerald Green)
           };
           const getStageBgColor = (key) => {
-            if (key === 'Sosialisasi') return 'var(--status-cold-bg)';
-            if (key === 'Pemberkasan' || key === 'Analisa') return 'var(--status-warm-bg)';
-            return 'var(--status-hot-bg)';
+            if (key === 'Sosialisasi') return '#f3e8ff';
+            if (key === 'Pemberkasan') return '#fef9c3';
+            if (key === 'Analisa') return '#ecfeff';
+            if (key === 'Approval') return '#ecfccb';
+            return '#dcfce7'; // Akad
           };
           
           const stageColor = getStageColor(st.key);
