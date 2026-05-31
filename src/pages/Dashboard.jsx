@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { getAllProspects, updateProspectStatus, getActiveMemo, getTimelineTargets, markMemoAsRead } from '../services/db';
 import { FileSpreadsheet, Eye, LayoutList, LayoutGrid, Heart } from '../components/Icons';
 
@@ -118,6 +118,7 @@ const Dashboard = () => {
 
   // Memo & Targets State
   const [activeMemo, setActiveMemo] = useState(null);
+  const lastTapRef = useRef(0);
   const [timelineTargets, setTimelineTargets] = useState({
     timeline: 'Juni 2026',
     targetKredit: 500000000,
@@ -186,6 +187,23 @@ const Dashboard = () => {
       setToast({ show: true, message: 'Memo berhasil ditandai dibaca! ❤️', type: 'success' });
     }
   };
+
+  const handleMemoDoubleClick = () => {
+    if (user.role === 'Officer') {
+      handleMarkMemoAsRead();
+    }
+  };
+
+  const handleMemoTouchStart = () => {
+    if (user.role !== 'Officer') return;
+    const now = Date.now();
+    const DOUBLE_PRESS_DELAY = 300;
+    if (now - lastTapRef.current < DOUBLE_PRESS_DELAY) {
+      handleMarkMemoAsRead();
+    }
+    lastTapRef.current = now;
+  };
+
 
   const handleStatusChange = async (id, newStatus) => {
     await updateProspectStatus(id, newStatus);
@@ -338,13 +356,21 @@ const Dashboard = () => {
         
         {/* Active Memo Broadcast Card */}
         {activeMemo && activeMemo.content && (
-          <div className="card" style={{ 
-            padding: '1.15rem', 
-            background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(10, 46, 92, 0.04))', 
-            border: '1.5px solid rgba(212, 175, 55, 0.25)', 
-            marginBottom: 0,
-            boxShadow: 'var(--shadow-sm)'
-          }}>
+          <div 
+            className="card" 
+            onDoubleClick={handleMemoDoubleClick}
+            onTouchStart={handleMemoTouchStart}
+            title={user.role === 'Officer' ? "Klik 2x / double tap kartu ini untuk menandai dibaca" : ""}
+            style={{ 
+              padding: '1.15rem', 
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(10, 46, 92, 0.04))', 
+              border: '1.5px solid rgba(212, 175, 55, 0.25)', 
+              marginBottom: 0,
+              boxShadow: 'var(--shadow-sm)',
+              cursor: user.role === 'Officer' ? 'pointer' : 'default',
+              userSelect: 'none'
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <span style={{ fontSize: '1.25rem' }}>📢</span>
               <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--bjb-blue-dark)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
