@@ -344,7 +344,7 @@ const Pipeline = () => {
                           {/* Row 1: Nama Prospek + Badges */}
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.3rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
                             <div className="pipeline-card-name" style={{ marginBottom: 0 }}>{p.name}</div>
-                            {isToday(p.createdAt) && <span className="badge-new">Baru</span>}
+                            {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                             {!p.synced && <span className="badge-offline">Offline</span>}
                             {(p.status === 'Approval' || p.status === 'Akad') && <span className="badge-urgent">Segera</span>}
                           </div>

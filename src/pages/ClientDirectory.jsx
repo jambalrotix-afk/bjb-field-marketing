@@ -459,7 +459,7 @@ const ClientDirectory = () => {
                     <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--bjb-blue-dark)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {p.name}
                     </div>
-                    {isToday(p.createdAt) && <span className="badge-new">Baru</span>}
+                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                     {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
                   
@@ -521,7 +521,7 @@ const ClientDirectory = () => {
                     <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--bjb-blue-dark)' }}>
                       {p.name}
                     </div>
-                    {isToday(p.createdAt) && <span className="badge-new">Baru</span>}
+                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                     {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>

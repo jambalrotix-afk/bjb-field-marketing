@@ -698,20 +698,18 @@ p {
 
 /* Badge 'BARU' on prospect cards */
 .badge-new {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-full);
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 50%;
   background: linear-gradient(135deg, var(--bjb-gold-light), var(--bjb-gold));
-  color: var(--bjb-blue-dark);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  vertical-align: middle;
-  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.3);
+  box-shadow: 
+    0 0 0 2px rgba(212, 175, 55, 0.35),
+    0 1px 4px rgba(212, 175, 55, 0.5);
   flex-shrink: 0;
+  vertical-align: middle;
+  margin-left: 4px;
 }
 
 /* Badge 'URGENT' for high-priority stage (Approval/Akad) */

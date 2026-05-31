@@ -542,7 +542,7 @@ const Dashboard = () => {
                     <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--bjb-blue-dark)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {p.name}
                     </div>
-                    {isToday(p.createdAt) && <span className="badge-new">Baru</span>}
+                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                     {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
                   
@@ -599,7 +599,7 @@ const Dashboard = () => {
                     <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--bjb-blue-dark)' }}>
                       {p.name}
                     </div>
-                    {isToday(p.createdAt) && <span className="badge-new">Baru</span>}
+                    {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                     {!p.synced && <span className="badge-offline">Offline</span>}
                     {(p.status === 'Approval' || p.status === 'Akad') && <span className="badge-urgent">Perlu Tindakan</span>}
                   </div>
