@@ -536,22 +536,60 @@ const Dashboard = () => {
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                {/* Left: Name & Metas inline to look highly compact */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', minWidth: '120px', flex: '1 0 120px' }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--bjb-blue-dark)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {/* Left: Name & Metas inline to look highly compact and perfectly aligned */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                  {/* Column 1: Client Name & Badges */}
+                  <div style={{ flex: '1 1 0%', minWidth: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <div 
+                      style={{ 
+                        fontWeight: 700, 
+                        fontSize: '0.82rem', 
+                        color: 'var(--bjb-blue-dark)', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        whiteSpace: 'nowrap'
+                      }}
+                      title={p.name}
+                    >
                       {p.name}
                     </div>
                     {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
                     {!p.synced && <span className="badge-offline">Offline</span>}
                   </div>
                   
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.74rem', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
-                    <span style={{ fontWeight: 600, padding: '0.1rem 0.35rem', backgroundColor: 'var(--border-light)', borderRadius: '4px', fontSize: '0.68rem', color: 'var(--text-main)' }}>{p.category}</span>
-                    <span style={{ color: 'var(--bjb-blue-light)', fontWeight: 800 }}>{formatRupiah(estimasi)}</span>
-                    {(user.role === 'Manager' || user.role === 'Super Admin') && (
-                      <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>• Sales: {salesName}</span>
-                    )}
+                  {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
+                  <div style={{ width: '65px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                    <span 
+                      style={{ 
+                        fontWeight: 700, 
+                        padding: '0.1rem 0.35rem', 
+                        backgroundColor: p.category === 'Kredit' ? '#eff6ff' : '#f0fdf4', 
+                        color: p.category === 'Kredit' ? '#1d4ed8' : '#15803d',
+                        border: p.category === 'Kredit' ? '1px solid #bfdbfe' : '1px solid #bbf7d0',
+                        borderRadius: '4px', 
+                        fontSize: '0.68rem',
+                        display: 'inline-block',
+                        textAlign: 'center',
+                        width: '100%',
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      {p.category}
+                    </span>
+                  </div>
+                  
+                  {/* Column 3: Nominal Value - Aligned perfectly */}
+                  <div style={{ width: '120px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                    <span 
+                      style={{ 
+                        color: 'var(--bjb-blue-light)', 
+                        fontWeight: 800, 
+                        fontSize: '0.82rem',
+                        fontFamily: 'Outfit, sans-serif'
+                      }}
+                    >
+                      {formatRupiah(estimasi)}
+                    </span>
                   </div>
                 </div>
 
