@@ -429,6 +429,40 @@ export const saveActiveMemo = (title, content, senderName, recipient = 'all') =>
   }
 };
 
+export const markMemoAsRead = (username, recipient = 'all') => {
+  try {
+    const memosStr = localStorage.getItem('bjb-memos-mapped');
+    const memos = memosStr ? JSON.parse(memosStr) : {};
+    
+    // Check if user has specific memo or if it falls back to 'all'
+    const key = memos[recipient] ? recipient : 'all';
+    
+    if (!memos[key]) {
+      memos[key] = {
+        title: 'PENGUMUMAN RESMI BJB FIELD',
+        content: 'Tingkatkan terus penetrasi produk Kredit & Funding di wilayah binaan Anda. Dorong nasabah potensial ke tahap Akad untuk pencapaian target maksimal kantor cabang.',
+        updatedBy: 'Pimpinan Cabang Utama',
+        timestamp: new Date(Date.now() - 3600000 * 2).toISOString()
+      };
+    }
+    
+    if (!memos[key].readBy) {
+      memos[key].readBy = [];
+    }
+    
+    if (!memos[key].readBy.includes(username)) {
+      memos[key].readBy.push(username);
+      localStorage.setItem('bjb-memos-mapped', JSON.stringify(memos));
+      writeLog('READ_MEMO', `Officer ${username} membaca memo "${memos[key].title}"`);
+    }
+    return true;
+  } catch (e) {
+    console.error('Failed to mark memo as read:', e);
+    return false;
+  }
+};
+
+
 export const getTimelineTargets = () => {
   try {
     const targetStr = localStorage.getItem('bjb-timeline-targets');

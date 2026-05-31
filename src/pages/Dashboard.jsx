@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getAllProspects, updateProspectStatus, getActiveMemo, getTimelineTargets } from '../services/db';
-import { FileSpreadsheet, Eye, LayoutList, LayoutGrid } from '../components/Icons';
+import { getAllProspects, updateProspectStatus, getActiveMemo, getTimelineTargets, markMemoAsRead } from '../services/db';
+import { FileSpreadsheet, Eye, LayoutList, LayoutGrid, Heart } from '../components/Icons';
 
 import Toast from '../components/Toast';
 import GreetingModal from '../components/GreetingModal';
@@ -178,6 +178,15 @@ const Dashboard = () => {
     setStats(st);
   };
 
+  const handleMarkMemoAsRead = () => {
+    if (user.role === 'Officer') {
+      markMemoAsRead(user.username, user.username);
+      const memo = getActiveMemo(user.username);
+      setActiveMemo(memo);
+      setToast({ show: true, message: 'Memo berhasil ditandai dibaca! ❤️', type: 'success' });
+    }
+  };
+
   const handleStatusChange = async (id, newStatus) => {
     await updateProspectStatus(id, newStatus);
     setToast({ show: true, message: `Status prospek berhasil diubah menjadi ${newStatus}!`, type: 'success' });
@@ -347,7 +356,60 @@ const Dashboard = () => {
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
               <span>Pengirim: <strong>{activeMemo.updatedBy}</strong></span>
-              <span>{activeMemo.timestamp ? new Date(activeMemo.timestamp).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : ''}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {/* Love (Heart) Icon & Text */}
+                {user.role === 'Officer' ? (
+                  <button
+                    type="button"
+                    onClick={handleMarkMemoAsRead}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '2px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      color: (activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? '#ef4444' : 'var(--text-muted)',
+                      transition: 'transform 0.15s ease, color 0.15s ease',
+                      outline: 'none'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.12)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <Heart 
+                      size={13} 
+                      fill={(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? '#ef4444' : 'none'} 
+                      color={(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? '#ef4444' : 'var(--text-muted)'} 
+                    />
+                    <span style={{ fontWeight: 700 }}>
+                      {(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? 'Sudah Dibaca' : 'Tandai Dibaca'}
+                    </span>
+                  </button>
+                ) : (
+                  <div 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '4px', 
+                      color: (activeMemo.readBy && activeMemo.readBy.length > 0) ? '#ef4444' : 'var(--text-muted)',
+                      cursor: 'help'
+                    }}
+                    title={activeMemo.readBy && activeMemo.readBy.length > 0 ? `Dibaca oleh: ${activeMemo.readBy.join(', ')}` : 'Belum dibaca oleh officer'}
+                  >
+                    <Heart 
+                      size={13} 
+                      fill={(activeMemo.readBy && activeMemo.readBy.length > 0) ? '#ef4444' : 'none'} 
+                      color={(activeMemo.readBy && activeMemo.readBy.length > 0) ? '#ef4444' : 'var(--text-muted)'} 
+                    />
+                    <span style={{ fontWeight: 700 }}>
+                      Dibaca {activeMemo.readBy ? activeMemo.readBy.length : 0} Officer
+                    </span>
+                  </div>
+                )}
+                <span>•</span>
+                <span>{activeMemo.timestamp ? new Date(activeMemo.timestamp).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : ''}</span>
+              </div>
             </div>
           </div>
         )}
