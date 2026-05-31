@@ -72,19 +72,25 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
   const estimasi = p.category === 'Kredit' ? p.plafond : p.penempatanDana;
   const salesName = p.createdBy === 'officer' ? 'Asep Marketing' : p.createdBy === 'officer_siti' ? 'Siti Funding' : p.createdBy === 'officer_budi' ? 'Budi Kredit' : p.createdBy;
   const getStatusColors = (status) => {
-    if (status === 'Sosialisasi' || status === 'Cold') {
-      return { color: 'var(--status-cold)', bg: 'var(--status-cold-bg)' };
-    }
-    if (status === 'Pemberkasan' || status === 'Analisa' || status === 'Warm') {
-      return { color: 'var(--status-warm)', bg: 'var(--status-warm-bg)' };
-    }
-    if (status === 'Batal') {
-      return { color: '#64748b', bg: '#f1f5f9' };
-    }
-    if (status === 'Ditolak') {
-      return { color: '#b91c1c', bg: '#fee2e2' };
-    }
-    return { color: 'var(--status-hot)', bg: 'var(--status-hot-bg)' };
+    const s = status ? status.trim() : 'Cold';
+    const statusLower = s.toLowerCase();
+    
+    // 100% unique, highly distinct colors matching the Dashboard status dots exactly
+    const config = {
+      cold: { color: '#0ea5e9', bg: '#e0f2fe' },                 // Sky Blue
+      warm: { color: '#f97316', bg: '#ffedd5' },                 // Orange
+      hot: { color: '#f43f5e', bg: '#ffe4e6' },                  // Deep Pink/Rose
+      sosialisasi: { color: '#a855f7', bg: '#f3e8ff' },          // Purple
+      negosiasi: { color: '#4f46e5', bg: '#e0e7ff' },            // Indigo Blue
+      pemberkasan: { color: '#eab308', bg: '#fef9c3' },          // Bright Yellow
+      analisa: { color: '#06b6d4', bg: '#ecfeff' },              // Cyan/Teal
+      approval: { color: '#84cc16', bg: '#ecfccb' },            // Lime Green
+      akad: { color: '#10b981', bg: '#dcfce7' },                // Emerald Green (Success!)
+      ditolak: { color: '#ef4444', bg: '#fee2e2' },              // Crimson Red
+      batal: { color: '#64748b', bg: '#f1f5f9' }                 // Slate Gray
+    };
+    
+    return config[statusLower] || config.cold;
   };
   const { color: statusColor, bg: statusBgColor } = getStatusColors(p.status);
 
