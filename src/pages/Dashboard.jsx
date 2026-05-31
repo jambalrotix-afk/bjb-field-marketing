@@ -48,34 +48,38 @@ const categoryFilterOptions = [
 
 const renderStatusBadge = (status) => {
   const s = status ? status.trim() : 'Cold';
-  const statusLower = s.toLowerCase();
   
-  // Mapping each status to a completely unique, highly distinct professional color
-  const config = {
-    cold: { label: 'Cold', color: '#0ea5e9' },                 // Sky Blue
-    warm: { label: 'Warm', color: '#f97316' },                 // Orange
-    hot: { label: 'Hot', color: '#f43f5e' },                   // Deep Pink/Rose
-    sosialisasi: { label: 'Sosialisasi', color: '#a855f7' },   // Purple
-    negosiasi: { label: 'Negosiasi', color: '#4f46e5' },       // Indigo Blue
-    pemberkasan: { label: 'Pemberkasan', color: '#eab308' },   // Bright Yellow
-    analisa: { label: 'Analisa', color: '#06b6d4' },           // Cyan/Teal
-    approval: { label: 'Approval', color: '#84cc16' },         // Lime Green
-    akad: { label: 'Akad', color: '#10b981' },                 // Emerald Green (Success!)
-    ditolak: { label: 'Ditolak', color: '#ef4444' },           // Crimson Red
-    batal: { label: 'Batal', color: '#64748b' }                // Slate Gray
-  };
-  
-  const activeConfig = config[statusLower] || config.cold;
+  // Aligning status dot colors to match exactly the 'Tahapan Prospek' stepper progress colors from ProspectDetailModal
+  let color = '#EF4444'; // Default Red for Cold/Sosialisasi
+  let label = s;
+
+  if (s === 'Sosialisasi' || s === 'Cold') {
+    color = '#EF4444'; // Red (var(--status-cold))
+    label = s === 'Cold' ? 'Cold' : 'Sosialisasi';
+  } else if (s === 'Pemberkasan' || s === 'Analisa' || s === 'Warm' || s === 'Negosiasi') {
+    color = '#F59E0B'; // Yellow/Gold (var(--status-warm))
+    label = s;
+  } else if (s === 'Batal') {
+    color = '#64748b'; // Slate Gray
+    label = 'Batal';
+  } else if (s === 'Ditolak') {
+    color = '#b91c1c'; // Crimson Red
+    label = 'Ditolak';
+  } else {
+    // Hot, Approval, Akad
+    color = '#10B981'; // Green (var(--status-hot))
+    label = s;
+  }
   
   return (
     <div 
-      title={`Status: ${activeConfig.label}`} 
+      title={`Status: ${label}`} 
       style={{
         width: '12px',
         height: '12px',
         borderRadius: '50%',
-        backgroundColor: activeConfig.color,
-        boxShadow: `0 0 0 3px ${activeConfig.color}20`,
+        backgroundColor: color,
+        boxShadow: `0 0 0 3px ${color}20`,
         flexShrink: 0,
         margin: '0 8px 0 4px',
         display: 'inline-block',
@@ -84,11 +88,11 @@ const renderStatusBadge = (status) => {
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'scale(1.25)';
-        e.currentTarget.style.boxShadow = `0 0 0 5px ${activeConfig.color}35`;
+        e.currentTarget.style.boxShadow = `0 0 0 5px ${color}35`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'scale(1)';
-        e.currentTarget.style.boxShadow = `0 0 0 3px ${activeConfig.color}20`;
+        e.currentTarget.style.boxShadow = `0 0 0 3px ${color}20`;
       }}
     />
   );
