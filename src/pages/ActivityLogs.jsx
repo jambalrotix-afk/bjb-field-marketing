@@ -9,6 +9,7 @@ const actionOptions = [
   { value: 'LOGIN', label: 'LOGIN' },
   { value: 'LOGOUT', label: 'LOGOUT' },
   { value: 'CREATE_PROSPECT', label: 'CREATE_PROSPECT' },
+  { value: 'DELETE_PROSPECT', label: 'DELETE_PROSPECT' },
   { value: 'CREATE_USER', label: 'CREATE_USER' },
   { value: 'DELETE_USER', label: 'DELETE_USER' },
   { value: 'SYNC_DATA', label: 'SYNC_DATA' }
@@ -27,6 +28,9 @@ const ActionBadge = ({ action }) => {
       break;
     case 'CREATE_PROSPECT':
       style = { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' }; // Green
+      break;
+    case 'DELETE_PROSPECT':
+      style = { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fca5a5' }; // Red
       break;
     case 'CREATE_USER':
       style = { backgroundColor: '#fef3c7', color: '#92400e', borderColor: '#fde68a' }; // Amber

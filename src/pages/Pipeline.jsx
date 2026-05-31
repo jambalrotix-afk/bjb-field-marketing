@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllProspects, updateProspectStatus } from '../services/db';
+import { getAllProspects, updateProspectStatus, deleteProspect } from '../services/db';
 import { ChevronLeft, ChevronRight, Eye, CreditCard, Banknote } from '../components/Icons';
 import Toast from '../components/Toast';
 import CustomSelect from '../components/CustomSelect';
@@ -141,6 +141,54 @@ const Pipeline = () => {
       await syncData();
       loadData();
     }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    await updateProspectStatus(id, newStatus);
+    setToast({ show: true, message: `Status prospek berhasil diubah menjadi ${newStatus}!`, type: 'success' });
+    
+    // Update local modal data state immediately
+    setSelectedProspect(prev => {
+      if (prev && prev.id === id) {
+        let customNote = `Melanjutkan ke proses ${newStatus}`;
+        if (newStatus === 'Sosialisasi') customNote = 'Sosialisasi produk bjb dan pendekatan awal dengan nasabah';
+        else if (newStatus === 'Pemberkasan') customNote = 'Melengkapi berkas dokumen persyaratan pengajuan';
+        else if (newStatus === 'Analisa') customNote = 'Melakukan analisa data keuangan dan kelayakan';
+        else if (newStatus === 'Approval') customNote = 'Mengajukan persetujuan komite kredit / pimpinan';
+        else if (newStatus === 'Akad') customNote = 'Melaksanakan proses akad kredit / penempatan dana dan closing';
+        else if (newStatus === 'Batal') customNote = 'Prospek dibatalkan / tidak melanjutkan proses';
+        else if (newStatus === 'Ditolak') customNote = 'Prospek ditolak oleh komite kredit / pihak bank';
+
+        return {
+          ...prev,
+          status: newStatus,
+          statusHistory: [
+            ...(prev.statusHistory || []),
+            { status: newStatus, timestamp: new Date().toISOString(), updatedBy: user.name || user.username, note: customNote }
+          ]
+        };
+      }
+      return prev;
+    });
+
+    loadData();
+    
+    // Auto sync
+    const { syncData } = await import('../services/syncService');
+    await syncData();
+    loadData();
+  };
+
+  const handleDeleteProspect = async (id) => {
+    await deleteProspect(id);
+    setToast({ show: true, message: 'Prospek berhasil dihapus dari database!', type: 'success' });
+    setSelectedProspect(null);
+    loadData();
+    
+    // Auto sync
+    const { syncData } = await import('../services/syncService');
+    await syncData();
+    loadData();
   };
 
   // Filter and group prospects
@@ -459,6 +507,8 @@ const Pipeline = () => {
         onClose={() => setSelectedProspect(null)}
         prospect={selectedProspect}
         isOnline={isOnline}
+        onStatusChange={handleStatusChange}
+        onDelete={handleDeleteProspect}
       />
 
       <Toast

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllProspects, updateProspectStatus } from '../services/db';
+import { getAllProspects, updateProspectStatus, deleteProspect } from '../services/db';
 import { Folder, Users, TrendingUp, Ban, FileSpreadsheet, Search, Sliders, Eye, LayoutList, LayoutGrid, CreditCard, Banknote, Layers } from '../components/Icons';
 import Toast from '../components/Toast';
 import CustomSelect from '../components/CustomSelect';
@@ -206,6 +206,18 @@ const ClientDirectory = () => {
       return prev;
     });
 
+    loadData();
+    
+    // Auto sync
+    const { syncData } = await import('../services/syncService');
+    await syncData();
+    loadData();
+  };
+
+  const handleDeleteProspect = async (id) => {
+    await deleteProspect(id);
+    setToast({ show: true, message: 'Prospek berhasil dihapus dari database!', type: 'success' });
+    setSelectedProspect(null);
     loadData();
     
     // Auto sync
@@ -674,6 +686,7 @@ const ClientDirectory = () => {
         prospect={selectedProspect}
         isOnline={isOnline}
         onStatusChange={handleStatusChange}
+        onDelete={handleDeleteProspect}
       />
     </div>
   );

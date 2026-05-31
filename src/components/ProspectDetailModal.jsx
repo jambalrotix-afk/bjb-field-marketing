@@ -55,7 +55,11 @@ const ProspectPhotoModal = ({ blob }) => {
   );
 };
 
-const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChange }) => {
+const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChange, onDelete }) => {
+  const storedUser = localStorage.getItem('user');
+  const currentUser = storedUser ? JSON.parse(storedUser) : { role: 'Officer' };
+  const isSuperAdmin = currentUser.role === 'Super Admin';
+
   // State untuk custom prompt modal
   const [promptModal, setPromptModal] = useState({ open: false, type: null });
 
@@ -654,7 +658,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
           alignItems: 'center',
           gap: '0.75rem' 
         }}>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
             {onStatusChange && p.status !== 'Batal' && p.status !== 'Ditolak' && (
               <>
                 <button
@@ -694,6 +698,31 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
                   Tolak
                 </button>
               </>
+            )}
+            {isSuperAdmin && onDelete && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm(`Apakah Anda yakin ingin menghapus prospek "${p.name}"? Tindakan ini tidak dapat dibatalkan.`)) {
+                    onDelete(p.id);
+                  }
+                }}
+                className="btn"
+                style={{ 
+                  padding: '0.5rem 0.8rem', 
+                  fontSize: '0.8rem', 
+                  width: 'auto', 
+                  minHeight: 'auto', 
+                  margin: 0,
+                  backgroundColor: '#fee2e2',
+                  color: '#dc2626',
+                  border: '1px solid rgba(220, 38, 38, 0.2)',
+                  borderRadius: 'var(--radius)',
+                  fontWeight: 700
+                }}
+              >
+                Hapus Prospek
+              </button>
             )}
           </div>
 

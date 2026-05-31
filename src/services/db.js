@@ -382,6 +382,23 @@ export const updateProspectStatus = async (id, status) => {
   }
 };
 
+export const deleteProspect = async (id) => {
+  const db = await initDB();
+  const prospect = await db.get(PROSPECTS_STORE, id);
+  if (prospect) {
+    await db.delete(PROSPECTS_STORE, id);
+    
+    // Add to sync queue
+    await db.add(SYNC_QUEUE_STORE, { prospectId: id, action: 'DELETE' });
+    
+    // Log the action
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { username: 'system', name: 'System', role: 'Super Admin' };
+    const detailString = `Menghapus prospek: ${prospect.name} (Kategori: ${prospect.category}, Estimasi: ${formatRupiah(prospect.category === 'Kredit' ? prospect.plafond : prospect.penempatanDana)})`;
+    await writeLog('DELETE_PROSPECT', detailString, user);
+  }
+};
+
 // ===============================================
 // 📢 ONE-WAY MEMO & TARGET TIMELINE HELPERS
 // ===============================================
