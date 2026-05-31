@@ -75,15 +75,15 @@ const BottomNav = () => {
           className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           end
         >
-          <div style={{ position: 'relative', display: 'inline-flex' }}>
+          <div style={{ display: 'inline-flex' }}>
             <LayoutDashboard size={20} />
-            {offlineCount > 0 && (
-              <span className="nav-badge nav-badge-red">
-                {offlineCount > 9 ? '9+' : offlineCount}
-              </span>
-            )}
           </div>
           <span>Dashboard</span>
+          {offlineCount > 0 && (
+            <span className="nav-badge nav-badge-red" style={{ top: '4px', right: '4px' }}>
+              {offlineCount > 9 ? '9+' : offlineCount}
+            </span>
+          )}
         </NavLink>
 
         {/* Pipeline */}
@@ -91,15 +91,15 @@ const BottomNav = () => {
           to="/pipeline"
           className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
         >
-          <div style={{ position: 'relative', display: 'inline-flex' }}>
+          <div style={{ display: 'inline-flex' }}>
             <Kanban size={20} />
-            {urgentCount > 0 && (
-              <span className="nav-badge nav-badge-blue">
-                {urgentCount > 9 ? '9+' : urgentCount}
-              </span>
-            )}
           </div>
           <span>Pipeline</span>
+          {urgentCount > 0 && (
+            <span className="nav-badge nav-badge-blue" style={{ top: '4px', right: '4px' }}>
+              {urgentCount > 9 ? '9+' : urgentCount}
+            </span>
+          )}
         </NavLink>
 
         {/* Operasional Utama Berdasarkan Peran */}
