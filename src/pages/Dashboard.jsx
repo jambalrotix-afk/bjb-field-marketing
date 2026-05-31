@@ -33,6 +33,17 @@ const isToday = (dateStr) => {
     d.getDate() === now.getDate();
 };
 
+const getStatusBadgeClass = (status) => {
+  const s = status ? status.toLowerCase() : 'sosialisasi';
+  if (s === 'batal') return 'badge-batal';
+  if (s === 'ditolak') return 'badge-ditolak';
+  if (s === 'akad') return 'badge-akad';
+  if (s === 'approval') return 'badge-approval';
+  if (s === 'analisa') return 'badge-analisa';
+  if (s === 'pemberkasan') return 'badge-pemberkasan';
+  return 'badge-sosialisasi';
+};
+
 const statusFilterOptions = [
   { value: 'All', label: 'Semua Status' },
   { value: 'Cold', label: 'Sosialisasi (Cold)' },
@@ -629,7 +640,10 @@ const Dashboard = () => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   gap: '1rem',
-                  marginBottom: 0
+                  marginBottom: 0,
+                  backgroundColor: '#ffffff', // Explicitly white background like data archive cards
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)'
                 }}
               >
                 <div>
@@ -655,7 +669,9 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
-                  {renderStatusBadge(p.status)}
+                  <span className={`badge ${getStatusBadgeClass(p.status)}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 800 }}>
+                    {p.status || 'Sosialisasi'}
+                  </span>
                   <button 
                     type="button"
                     className="btn btn-outline"
