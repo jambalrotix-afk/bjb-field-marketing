@@ -500,7 +500,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
             </h4>
             
             <div style={{ 
-              padding: '1rem 1.25rem', 
+              padding: '1rem 1rem 1rem 1.5rem', 
               backgroundColor: 'var(--surface-hover)', 
               borderRadius: 'var(--radius)', 
               border: '1px solid var(--border)',
@@ -508,7 +508,9 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
               flexDirection: 'column', 
               gap: '0.75rem', 
               position: 'relative', 
-              paddingLeft: '1.5rem'
+              maxHeight: '190px',
+              overflowY: 'auto',
+              boxSizing: 'border-box'
             }}>
               {/* Vertical Dotted line */}
               <div style={{ 
