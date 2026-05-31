@@ -143,12 +143,12 @@ p {
 .header-user-badge {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  font-size: 0.7rem;
-  color: #e2e8f0;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   background: rgba(255, 255, 255, 0.08);
   padding: 0.15rem 0.45rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.05);
   margin-top: 0.2rem;
   max-width: 260px;
@@ -166,7 +166,7 @@ p {
   font-weight: 700;
   background: rgba(255, 255, 255, 0.05);
   padding: 0.25rem 0.55rem;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.03);
   transition: all var(--transition-fast);
 }
@@ -506,7 +506,7 @@ p {
   align-items: stretch;
   padding: 0.4rem;
   z-index: 200;
-  border-radius: 22px;
+  border-radius: var(--radius-lg);
   box-shadow:
     0 8px 32px rgba(10, 46, 92, 0.10),
     0 2px 8px rgba(0,0,0,0.04),
@@ -529,7 +529,7 @@ p {
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
   padding: 0.5rem 0.6rem;
-  border-radius: 16px;
+  border-radius: var(--radius);
   transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
   flex: 1;
   text-align: center;
@@ -1254,7 +1254,7 @@ tr:hover td {
   .table-compact td:last-child button {
     padding: 0.35rem 0.75rem !important;
     font-size: 0.75rem !important;
-    border-radius: 8px !important;
+    border-radius: var(--radius-sm) !important;
     font-weight: 700 !important;
   }
 }
@@ -1270,7 +1270,7 @@ tr:hover td {
   padding: 1.25rem 1rem;
   background-color: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   box-sizing: border-box;
 }
@@ -1501,7 +1501,7 @@ tr:hover td {
 .pipeline-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.6rem;
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
