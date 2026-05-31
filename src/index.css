@@ -2329,6 +2329,75 @@ tr:hover td {
   }
 }
 
+/* =============================================
+   DETAIL INFO ROWS (PROSPECTDETAILMODAL) — RESPONSIVE
+   ============================================= */
+.detail-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.detail-info-row-start {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.detail-info-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  width: 142px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.detail-info-value {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* HP Portrait Mode (width <= 480px) */
+@media (max-width: 480px) {
+  .detail-info-row,
+  .detail-info-row-start {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  .detail-info-row:not(:last-child),
+  .detail-info-row-start:not(:last-child) {
+    border-bottom: 1px dashed var(--border-light);
+  }
+
+  .detail-info-label {
+    width: auto;
+    font-size: 0.76rem;
+    margin-bottom: 0px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+
+  .detail-info-value {
+    padding-left: 22px; /* Sejajar di bawah teks label (14px icon + 8px gap) */
+    font-size: 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 
 
 

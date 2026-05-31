@@ -414,10 +414,12 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
             </h4>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Phone size={14} style={{ color: 'var(--bjb-blue)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>No. Telepon:</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div className="detail-info-row">
+                <span className="detail-info-label">
+                  <Phone size={14} style={{ color: 'var(--bjb-blue)', flexShrink: 0 }} />
+                  No. Telepon:
+                </span>
+                <div className="detail-info-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <a href={`tel:${p.phone}`} style={{ fontSize: '0.85rem', color: 'var(--bjb-blue)', fontWeight: 700, textDecoration: 'none' }} title="Telepon Langsung">
                     {p.phone}
                   </a>
@@ -452,26 +454,32 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <MapPin size={14} style={{ color: 'var(--status-cold)', marginTop: '3px', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>Alamat:</span>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
+              <div className="detail-info-row-start">
+                <span className="detail-info-label">
+                  <MapPin size={14} style={{ color: 'var(--status-cold)', marginTop: '3px', flexShrink: 0 }} />
+                  Alamat:
+                </span>
+                <span className="detail-info-value">
                   {p.address || '-'}
                 </span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid var(--border-light)', paddingTop: '0.6rem', marginTop: '0.2rem' }}>
-                <User size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>Marketing:</span>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 600 }}>
+              <div className="detail-info-row" style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.6rem', marginTop: '0.2rem' }}>
+                <span className="detail-info-label">
+                  <User size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                  Marketing:
+                </span>
+                <span className="detail-info-value" style={{ fontWeight: 600 }}>
                   {salesName}
                 </span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Calendar size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '120px', fontWeight: 500 }}>Tgl Kunjungan:</span>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-main)' }}>
+              <div className="detail-info-row">
+                <span className="detail-info-label">
+                  <Calendar size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                  Tgl Kunjungan:
+                </span>
+                <span className="detail-info-value">
                   {p.createdAt || p.tanggalKunjungan ? new Date(p.createdAt || p.tanggalKunjungan).toLocaleDateString('id-ID', { dateStyle: 'long' }) : '-'}
                 </span>
               </div>
