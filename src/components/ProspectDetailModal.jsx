@@ -115,7 +115,7 @@ const ProspectDetailModal = ({ isOpen, onClose, prospect, isOnline, onStatusChan
 
   return createPortal(
     <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div className="modal-content" style={{ maxWidth: '520px', width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
+      <div className="modal-content" style={{ maxWidth: '520px', width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '90dvh' }}>
         
         {/* Header */}
         <div className="modal-header" style={{ 

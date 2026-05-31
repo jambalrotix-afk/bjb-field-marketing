@@ -68,11 +68,20 @@ const PromptModal = ({
     >
       <div
         className="modal-content"
-        style={{ maxWidth: '420px', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.18)' }}
+        style={{ 
+          maxWidth: '420px', 
+          width: '100%', 
+          borderRadius: '16px', 
+          overflow: 'hidden', 
+          boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+          maxHeight: '90dvh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
         onKeyDown={handleKeyDown}
       >
         {/* Header */}
-        <div style={{
+        <div className="modal-header" style={{
           padding: '1.25rem 1.5rem 1rem',
           borderBottom: '1px solid var(--border-light)',
           display: 'flex',
@@ -90,7 +99,14 @@ const PromptModal = ({
         </div>
 
         {/* Body */}
-        <div style={{ padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+        <div className="modal-body" style={{ 
+          padding: '1.25rem 1.5rem', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '0.6rem',
+          overflowY: 'auto',
+          flex: 1
+        }}>
           <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
             {label}
           </label>
@@ -130,7 +146,7 @@ const PromptModal = ({
         </div>
 
         {/* Footer */}
-        <div style={{
+        <div className="modal-actions" style={{
           padding: '0.875rem 1.5rem',
           borderTop: '1px solid var(--border-light)',
           backgroundColor: 'var(--surface-hover)',

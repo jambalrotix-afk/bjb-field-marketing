@@ -39,7 +39,7 @@ const GreetingModal = ({ isOpen, onClose, userName, userRole }) => {
           borderRadius: '24px'
         }}
       >
-        <div style={{ padding: '2rem 1.5rem 1.5rem', textAlign: 'center' }}>
+        <div style={{ padding: '2rem 1.5rem 1.5rem', textAlign: 'center', overflowY: 'auto', flex: 1 }}>
           {/* Greeting Icon Header */}
           <div 
             style={{ 
