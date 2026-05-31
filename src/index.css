@@ -169,7 +169,7 @@ p {
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.05);
   margin-top: 0.2rem;
-  max-width: 260px;
+  max-width: 320px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -191,7 +191,7 @@ p {
 
 @media (max-width: 480px) {
   .header-user-badge {
-    max-width: 145px;
+    max-width: 210px;
     font-size: 0.65rem;
   }
   .header-status-text {
