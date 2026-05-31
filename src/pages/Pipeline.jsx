@@ -28,6 +28,22 @@ const isToday = (dateStr) => {
     d.getDate() === now.getDate();
 };
 
+const getStageColor = (key) => {
+  if (key === 'Sosialisasi') return '#a855f7';   // Purple
+  if (key === 'Pemberkasan') return '#eab308';   // Yellow
+  if (key === 'Analisa') return '#06b6d4';       // Cyan/Teal
+  if (key === 'Approval') return '#84cc16';      // Lime Green
+  return '#10b981';                              // Akad (Emerald Green)
+};
+
+const getStageBgColor = (key) => {
+  if (key === 'Sosialisasi') return '#f3e8ff';
+  if (key === 'Pemberkasan') return '#fef9c3';
+  if (key === 'Analisa') return '#ecfeff';
+  if (key === 'Approval') return '#ecfccb';
+  return '#dcfce7'; // Akad
+};
+
 const Pipeline = () => {
   const [user, setUser] = useState({ username: '', role: 'Officer', name: 'User' });
   const [prospects, setProspects] = useState([]);
@@ -231,21 +247,6 @@ const Pipeline = () => {
           const stageOrder = ['Sosialisasi', 'Pemberkasan', 'Analisa', 'Approval', 'Akad'];
           const isCompleted = stageOrder.indexOf(st.key) < stageOrder.indexOf(activeStage);
           
-          const getStageColor = (key) => {
-            if (key === 'Sosialisasi') return '#a855f7';   // Purple
-            if (key === 'Pemberkasan') return '#eab308';   // Yellow
-            if (key === 'Analisa') return '#06b6d4';       // Cyan/Teal
-            if (key === 'Approval') return '#84cc16';      // Lime Green
-            return '#10b981';                              // Akad (Emerald Green)
-          };
-          const getStageBgColor = (key) => {
-            if (key === 'Sosialisasi') return '#f3e8ff';
-            if (key === 'Pemberkasan') return '#fef9c3';
-            if (key === 'Analisa') return '#ecfeff';
-            if (key === 'Approval') return '#ecfccb';
-            return '#dcfce7'; // Akad
-          };
-          
           const stageColor = getStageColor(st.key);
           const stageBg = getStageBgColor(st.key);
           
@@ -316,6 +317,8 @@ const Pipeline = () => {
         {stages.map(stage => {
           const list = getStageProspects(stage.key);
           const statusLower = stage.key.toLowerCase();
+          const colColor = getStageColor(stage.key);
+          const colBg = getStageBgColor(stage.key);
           
           return (
             <div 
@@ -324,11 +327,19 @@ const Pipeline = () => {
               className={`pipeline-column pipeline-column-${statusLower}`}
             >
               {/* Column Header */}
-              <div className="pipeline-column-header">
-                <div className="pipeline-column-title">
+              <div className="pipeline-column-header" style={{ borderBottomColor: `${colColor}40` }}>
+                <div className="pipeline-column-title" style={{ color: colColor }}>
                   <span>{stage.title}</span>
                 </div>
-                <span className="pipeline-column-count">{list.length}</span>
+                <span 
+                  className="pipeline-column-count"
+                  style={{
+                    backgroundColor: colBg,
+                    color: colColor
+                  }}
+                >
+                  {list.length}
+                </span>
               </div>
 
               {/* Column Cards */}
