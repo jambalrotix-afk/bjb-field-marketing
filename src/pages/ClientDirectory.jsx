@@ -491,37 +491,17 @@ const ClientDirectory = () => {
             return (
               <div 
                 key={p.id} 
-                className="clickable"
+                className="prospect-row"
                 onClick={() => setSelectedProspect(p)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.45rem 0.85rem',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.15s ease',
-                  borderBottom: index < currentItems.length - 1 ? '1px solid var(--border-light)' : 'none',
-                  gap: '0.75rem',
-                  boxSizing: 'border-box'
+                  borderBottom: index < currentItems.length - 1 ? '1px solid var(--border-light)' : 'none'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {/* Left: Name & Metas inline to look highly compact and perfectly aligned */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                <div className="prospect-row-info">
                   {/* Column 1: Client Name & Badges */}
-                  <div style={{ flex: '1 1 0%', minWidth: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <div 
-                      style={{ 
-                        fontWeight: 700, 
-                        fontSize: '0.82rem', 
-                        color: 'var(--bjb-blue-dark)', 
-                        overflow: 'hidden', 
-                        textOverflow: 'ellipsis', 
-                        whiteSpace: 'nowrap'
-                      }}
-                      title={p.name}
-                    >
+                  <div className="prospect-row-name-col">
+                    <div className="prospect-row-name" title={p.name}>
                       {p.name}
                     </div>
                     {isToday(p.createdAt) && <span className="badge-new" title="Prospek Baru Ditambahkan Hari Ini" />}
@@ -529,43 +509,22 @@ const ClientDirectory = () => {
                   </div>
                   
                   {/* Column 2: Category (Kredit / Funding) - Fixed width for alignment */}
-                  <div style={{ width: '65px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                    <span 
-                      style={{ 
-                        fontWeight: 700, 
-                        padding: '0.1rem 0.35rem', 
-                        backgroundColor: p.category === 'Kredit' ? '#eff6ff' : '#f0fdf4', 
-                        color: p.category === 'Kredit' ? '#1d4ed8' : '#15803d',
-                        border: p.category === 'Kredit' ? '1px solid #bfdbfe' : '1px solid #bbf7d0',
-                        borderRadius: '4px', 
-                        fontSize: '0.68rem',
-                        display: 'inline-block',
-                        textAlign: 'center',
-                        width: '100%',
-                        boxSizing: 'border-box'
-                      }}
-                    >
+                  <div className="prospect-row-category-col">
+                    <span className={`prospect-row-category ${p.category === 'Kredit' ? 'prospect-row-category-kredit' : 'prospect-row-category-funding'}`}>
                       {p.category}
                     </span>
                   </div>
                   
                   {/* Column 3: Nominal Value - Aligned perfectly */}
-                  <div style={{ width: '120px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                    <span 
-                      style={{ 
-                        color: 'var(--bjb-blue-light)', 
-                        fontWeight: 800, 
-                        fontSize: '0.82rem',
-                        fontFamily: 'Outfit, sans-serif'
-                      }}
-                    >
+                  <div className="prospect-row-nominal-col">
+                    <span className="prospect-row-nominal">
                       {formatRupiah(estimasi)}
                     </span>
                   </div>
                 </div>
 
                 {/* Right: Status Badge & small Detail Button */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
+                <div className="prospect-row-actions" onClick={(e) => e.stopPropagation()}>
                   {renderStatusBadge(p.status)}
                   <button 
                     type="button"
