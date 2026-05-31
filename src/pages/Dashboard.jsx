@@ -50,19 +50,19 @@ const renderStatusBadge = (status) => {
   const s = status ? status.trim() : 'Cold';
   const statusLower = s.toLowerCase();
   
-  // Mapping status to standard colors
+  // Mapping each status to a completely unique, highly distinct professional color
   const config = {
-    cold: { label: 'Cold', color: '#0284c7' },
-    warm: { label: 'Warm', color: '#ea580c' },
-    hot: { label: 'Hot', color: '#dc2626' },
-    sosialisasi: { label: 'Sosialisasi', color: '#0d9488' },
-    negosiasi: { label: 'Negosiasi', color: '#4f46e5' },
-    pemberkasan: { label: 'Pemberkasan', color: '#d97706' },
-    analisa: { label: 'Analisa', color: '#2563eb' },
-    approval: { label: 'Approval', color: '#16a34a' },
-    akad: { label: 'Akad', color: '#15803d' },
-    ditolak: { label: 'Ditolak', color: '#b91c1c' },
-    batal: { label: 'Batal', color: '#475569' }
+    cold: { label: 'Cold', color: '#0ea5e9' },                 // Sky Blue
+    warm: { label: 'Warm', color: '#f97316' },                 // Orange
+    hot: { label: 'Hot', color: '#f43f5e' },                   // Deep Pink/Rose
+    sosialisasi: { label: 'Sosialisasi', color: '#a855f7' },   // Purple
+    negosiasi: { label: 'Negosiasi', color: '#4f46e5' },       // Indigo Blue
+    pemberkasan: { label: 'Pemberkasan', color: '#eab308' },   // Bright Yellow
+    analisa: { label: 'Analisa', color: '#06b6d4' },           // Cyan/Teal
+    approval: { label: 'Approval', color: '#84cc16' },         // Lime Green
+    akad: { label: 'Akad', color: '#10b981' },                 // Emerald Green (Success!)
+    ditolak: { label: 'Ditolak', color: '#ef4444' },           // Crimson Red
+    batal: { label: 'Batal', color: '#64748b' }                // Slate Gray
   };
   
   const activeConfig = config[statusLower] || config.cold;
