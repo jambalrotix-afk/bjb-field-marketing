@@ -383,11 +383,12 @@ const Dashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
               <span>Pengirim: <strong>{activeMemo.updatedBy}</strong></span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {/* Love (Heart) Icon & Text */}
+                {/* Love (Heart) Icon */}
                 {user.role === 'Officer' ? (
                   <button
                     type="button"
                     onClick={handleMarkMemoAsRead}
+                    title={(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? "Sudah Dibaca" : "Klik untuk menandai dibaca / Klik 2x kartu"}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -395,42 +396,34 @@ const Dashboard = () => {
                       padding: '2px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '4px',
                       color: (activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? '#ef4444' : 'var(--text-muted)',
                       transition: 'transform 0.15s ease, color 0.15s ease',
                       outline: 'none'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.12)'}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
                     onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   >
                     <Heart 
-                      size={13} 
+                      size={14} 
                       fill={(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? '#ef4444' : 'none'} 
                       color={(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? '#ef4444' : 'var(--text-muted)'} 
                     />
-                    <span style={{ fontWeight: 700 }}>
-                      {(activeMemo.readBy && activeMemo.readBy.includes(user.username)) ? 'Sudah Dibaca' : 'Tandai Dibaca'}
-                    </span>
                   </button>
                 ) : (
                   <div 
                     style={{ 
                       display: 'flex', 
                       alignItems: 'center', 
-                      gap: '4px', 
                       color: (activeMemo.readBy && activeMemo.readBy.length > 0) ? '#ef4444' : 'var(--text-muted)',
                       cursor: 'help'
                     }}
-                    title={activeMemo.readBy && activeMemo.readBy.length > 0 ? `Dibaca oleh: ${activeMemo.readBy.join(', ')}` : 'Belum dibaca oleh officer'}
+                    title={activeMemo.readBy && activeMemo.readBy.length > 0 ? `Dibaca oleh (${activeMemo.readBy.length} Officer): ${activeMemo.readBy.join(', ')}` : 'Belum dibaca oleh officer'}
                   >
                     <Heart 
-                      size={13} 
+                      size={14} 
                       fill={(activeMemo.readBy && activeMemo.readBy.length > 0) ? '#ef4444' : 'none'} 
                       color={(activeMemo.readBy && activeMemo.readBy.length > 0) ? '#ef4444' : 'var(--text-muted)'} 
                     />
-                    <span style={{ fontWeight: 700 }}>
-                      Dibaca {activeMemo.readBy ? activeMemo.readBy.length : 0} Officer
-                    </span>
                   </div>
                 )}
                 <span>•</span>
