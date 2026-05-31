@@ -130,7 +130,7 @@ const BottomNav = () => {
           type="button"
           onClick={() => setIsDrawerOpen(true)}
           className={`nav-item ${isMoreActive ? 'active' : ''}`}
-          style={{ border: 'none', outline: 'none', background: 'transparent' }}
+          style={{ border: 'none', outline: 'none' }}
         >
           <div style={{ position: 'relative', display: 'inline-flex', flexShrink: 0 }}>
             <MoreHorizontal size={20} />
@@ -144,7 +144,6 @@ const BottomNav = () => {
         <div className="more-sheet-overlay" onClick={() => setIsDrawerOpen(false)}>
           <div className="more-sheet-content" onClick={(e) => e.stopPropagation()}>
             <div className="more-sheet-header">
-              <div className="more-sheet-drag-handle" />
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 className="more-sheet-title">Menu Lainnya</h3>
                 <button 
