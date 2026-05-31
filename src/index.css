@@ -379,19 +379,52 @@ p {
   text-transform: uppercase;
 }
 
-.badge-cold, .badge-sosialisasi {
-  background-color: var(--status-cold-bg);
-  color: var(--status-cold);
+.badge-cold {
+  background-color: #f0f9ff;
+  color: #0ea5e9;
+  border: 1px solid rgba(14, 165, 233, 0.25);
 }
 
-.badge-warm, .badge-pemberkasan, .badge-analisa {
-  background-color: var(--status-warm-bg);
-  color: var(--status-warm);
+.badge-warm {
+  background-color: #fff7ed;
+  color: #f97316;
+  border: 1px solid rgba(249, 115, 22, 0.25);
 }
 
-.badge-hot, .badge-approval, .badge-akad {
-  background-color: var(--status-hot-bg);
-  color: var(--status-hot);
+.badge-hot {
+  background-color: #fff1f2;
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.25);
+}
+
+.badge-sosialisasi {
+  background-color: #f3e8ff;
+  color: #a855f7;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.badge-pemberkasan {
+  background-color: #fef9c3;
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.25);
+}
+
+.badge-analisa {
+  background-color: #ecfeff;
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+.badge-approval {
+  background-color: #ecfccb;
+  color: #84cc16;
+  border: 1px solid rgba(132, 204, 22, 0.25);
+}
+
+.badge-akad {
+  background-color: #dcfce7;
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .badge-batal {
@@ -403,7 +436,7 @@ p {
 .badge-ditolak {
   background-color: #fee2e2;
   color: #b91c1c;
-  border: 1px solid rgba(185, 28, 28, 0.2);
+  border: 1px solid rgba(185, 28, 28, 0.25);
 }
 
 /* Tab Toggle – unified pattern used across all pages */
